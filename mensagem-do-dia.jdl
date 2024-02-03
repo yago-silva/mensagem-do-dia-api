@@ -1,0 +1,136 @@
+entity Category {
+	name String required
+    createdAt Instant required
+    updatedAt Instant required
+    featured Boolean required
+    active Boolean required
+    slug String required
+}
+
+entity Tag {
+	name String required
+    createdAt Instant required
+    updatedAt Instant required
+    featured Boolean required
+    active Boolean required
+    slug String required
+}
+
+entity Phrase {
+	content String required
+    createdAt Instant required
+    updatedAt Instant required
+    featured Boolean required
+    active Boolean required
+    slug String required
+}
+
+entity Author {
+	name String required
+    createdAt Instant required
+    updatedAt Instant required
+    featured Boolean required
+    active Boolean required
+    slug String required
+}
+
+enum DeviceType {
+	MOBILE, DESKTOP
+}
+
+entity Ad {
+	createdAt Instant required
+    updatedAt Instant required
+    locale String required
+    deviceType String required
+    featured Boolean required
+    active Boolean required
+    affiliateLink String
+}
+
+enum MediaType {
+	IMAGE, VIDEO
+}
+
+entity Media {
+	createdAt Instant required
+    updatedAt Instant required
+	type MediaType required
+    url String required
+    width Long required
+    height Long required
+    active Boolean required
+}
+
+relationship OneToOne {
+	Category{owner} to User with builtInEntity
+}
+
+relationship OneToOne {
+	Tag{owner} to User with builtInEntity
+}
+
+relationship OneToOne {
+	Phrase{owner} to User with builtInEntity
+}
+relationship OneToOne {
+	Author{owner} to User with builtInEntity
+}
+relationship OneToOne {
+	Ad{owner} to User with builtInEntity
+}
+relationship OneToOne {
+	Media{owner} to User with builtInEntity
+}
+
+relationship OneToMany {
+	Category {parent} to Category
+}
+
+relationship ManyToMany {
+	Phrase to Category
+}
+
+relationship ManyToMany {
+	Phrase to Tag
+}
+
+relationship OneToOne {
+	Phrase to Author
+}
+
+relationship OneToMany {
+	Phrase to Media
+}
+
+relationship OneToMany {
+	Ad to Media
+}
+
+relationship OneToMany {
+	Category to Media
+}
+
+relationship OneToMany {
+	Tag to Media
+}
+
+relationship ManyToMany {
+	Ad to Category
+}
+
+relationship ManyToMany {
+	Ad to Tag
+}
+
+relationship ManyToMany {
+	Ad to Author
+}
+
+relationship ManyToMany {
+	Tag to Category
+}
+
+
+// Use Data Transfer Objects (DTO)
+dto * with mapstruct

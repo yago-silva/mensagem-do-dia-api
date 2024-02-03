@@ -1,0 +1,34 @@
+{
+  "mensagemDoDiaApp": {
+    "phrase": {
+      "home": {
+        "title": "Phrases",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Phrase",
+        "createOrEditLabel": "Create or edit a Phrase",
+        "notFound": "No Phrases found"
+      },
+      "created": "A new Phrase is created with identifier {{ param }}",
+      "updated": "A Phrase is updated with identifier {{ param }}",
+      "deleted": "A Phrase is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Phrase {{ id }}?"
+      },
+      "detail": {
+        "title": "Phrase"
+      },
+      "id": "ID",
+      "content": "Content",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "featured": "Featured",
+      "active": "Active",
+      "slug": "Slug",
+      "owner": "Owner",
+      "author": "Author",
+      "media": "Media",
+      "category": "Category",
+      "tag": "Tag"
+    }
+  }
+}

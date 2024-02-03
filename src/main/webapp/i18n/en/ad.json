@@ -1,0 +1,35 @@
+{
+  "mensagemDoDiaApp": {
+    "ad": {
+      "home": {
+        "title": "Ads",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Ad",
+        "createOrEditLabel": "Create or edit a Ad",
+        "notFound": "No Ads found"
+      },
+      "created": "A new Ad is created with identifier {{ param }}",
+      "updated": "A Ad is updated with identifier {{ param }}",
+      "deleted": "A Ad is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Ad {{ id }}?"
+      },
+      "detail": {
+        "title": "Ad"
+      },
+      "id": "ID",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "locale": "Locale",
+      "deviceType": "Device Type",
+      "featured": "Featured",
+      "active": "Active",
+      "affiliateLink": "Affiliate Link",
+      "owner": "Owner",
+      "media": "Media",
+      "category": "Category",
+      "tag": "Tag",
+      "author": "Author"
+    }
+  }
+}

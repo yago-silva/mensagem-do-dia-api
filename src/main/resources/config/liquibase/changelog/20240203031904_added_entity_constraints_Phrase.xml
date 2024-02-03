@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!--
+        Added the constraints for entity Phrase.
+    -->
+    <changeSet id="20240203031904-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="owner_id"
+                                 baseTableName="phrase"
+                                 constraintName="fk_phrase__owner_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="author_id"
+                                 baseTableName="phrase"
+                                 constraintName="fk_phrase__author_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="author"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="phrase_id"
+                                 baseTableName="rel_phrase__category"
+                                 constraintName="fk_rel_phrase__category__phrase_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="phrase"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="category_id"
+                                 baseTableName="rel_phrase__category"
+                                 constraintName="fk_rel_phrase__category__category_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="category"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="phrase_id"
+                                 baseTableName="rel_phrase__tag"
+                                 constraintName="fk_rel_phrase__tag__phrase_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="phrase"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="tag_id"
+                                 baseTableName="rel_phrase__tag"
+                                 constraintName="fk_rel_phrase__tag__tag_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tag"
+                                 />
+    </changeSet>
+</databaseChangeLog>

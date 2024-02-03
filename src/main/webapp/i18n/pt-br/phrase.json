@@ -1,0 +1,34 @@
+{
+  "mensagemDoDiaApp": {
+    "phrase": {
+      "home": {
+        "title": "Phrases",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Phrase",
+        "createOrEditLabel": "Criar ou editar Phrase",
+        "notFound": "Nenhum Phrase encontrado"
+      },
+      "created": "Um novo Phrase foi criado com o identificador {{ param }}",
+      "updated": "Um Phrase foi atualizado com o identificador {{ param }}",
+      "deleted": "Um Phrase foi excluído com o identificador {{ param }}",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Phrase {{ id }}?"
+      },
+      "detail": {
+        "title": "Phrase"
+      },
+      "id": "ID",
+      "content": "Content",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "featured": "Featured",
+      "active": "Active",
+      "slug": "Slug",
+      "owner": "Owner",
+      "author": "Author",
+      "media": "Media",
+      "category": "Category",
+      "tag": "Tag"
+    }
+  }
+}

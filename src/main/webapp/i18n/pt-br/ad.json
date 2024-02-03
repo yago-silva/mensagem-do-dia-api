@@ -1,0 +1,35 @@
+{
+  "mensagemDoDiaApp": {
+    "ad": {
+      "home": {
+        "title": "Ads",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Ad",
+        "createOrEditLabel": "Criar ou editar Ad",
+        "notFound": "Nenhum Ad encontrado"
+      },
+      "created": "Um novo Ad foi criado com o identificador {{ param }}",
+      "updated": "Um Ad foi atualizado com o identificador {{ param }}",
+      "deleted": "Um Ad foi excluído com o identificador {{ param }}",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Ad {{ id }}?"
+      },
+      "detail": {
+        "title": "Ad"
+      },
+      "id": "ID",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "locale": "Locale",
+      "deviceType": "Device Type",
+      "featured": "Featured",
+      "active": "Active",
+      "affiliateLink": "Affiliate Link",
+      "owner": "Owner",
+      "media": "Media",
+      "category": "Category",
+      "tag": "Tag",
+      "author": "Author"
+    }
+  }
+}

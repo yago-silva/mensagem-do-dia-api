@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!--
+        Added the constraints for entity Ad.
+    -->
+    <changeSet id="20240203032104-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="owner_id"
+                                 baseTableName="ad"
+                                 constraintName="fk_ad__owner_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="ad_id"
+                                 baseTableName="rel_ad__category"
+                                 constraintName="fk_rel_ad__category__ad_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="ad"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="category_id"
+                                 baseTableName="rel_ad__category"
+                                 constraintName="fk_rel_ad__category__category_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="category"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="ad_id"
+                                 baseTableName="rel_ad__tag"
+                                 constraintName="fk_rel_ad__tag__ad_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="ad"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="tag_id"
+                                 baseTableName="rel_ad__tag"
+                                 constraintName="fk_rel_ad__tag__tag_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tag"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="ad_id"
+                                 baseTableName="rel_ad__author"
+                                 constraintName="fk_rel_ad__author__ad_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="ad"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="author_id"
+                                 baseTableName="rel_ad__author"
+                                 constraintName="fk_rel_ad__author__author_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="author"
+                                 />
+    </changeSet>
+</databaseChangeLog>
