@@ -52,7 +52,7 @@ public class Phrase implements Serializable {
     private User owner;
 
     @JsonIgnoreProperties(value = { "owner", "phrase", "ads" }, allowSetters = true)
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(unique = true)
     private Author author;
 
@@ -60,7 +60,7 @@ public class Phrase implements Serializable {
     @JsonIgnoreProperties(value = { "owner", "phrase", "ad", "category", "tag" }, allowSetters = true)
     private Set<Media> media = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "rel_phrase__category",
         joinColumns = @JoinColumn(name = "phrase_id"),
@@ -69,7 +69,7 @@ public class Phrase implements Serializable {
     @JsonIgnoreProperties(value = { "owner", "parents", "media", "phrases", "ads", "tags", "category" }, allowSetters = true)
     private Set<Category> categories = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "rel_phrase__tag", joinColumns = @JoinColumn(name = "phrase_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
     @JsonIgnoreProperties(value = { "owner", "media", "categories", "phrases", "ads" }, allowSetters = true)
     private Set<Tag> tags = new HashSet<>();

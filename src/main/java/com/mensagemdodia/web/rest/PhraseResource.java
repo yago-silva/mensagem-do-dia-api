@@ -3,6 +3,7 @@ package com.mensagemdodia.web.rest;
 import com.mensagemdodia.repository.PhraseRepository;
 import com.mensagemdodia.service.PhraseService;
 import com.mensagemdodia.service.dto.PhraseDTO;
+import com.mensagemdodia.service.dto.SluggedGroupDTO;
 import com.mensagemdodia.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -142,6 +143,12 @@ public class PhraseResource {
     public List<PhraseDTO> getAllPhrases(@RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload) {
         log.debug("REST request to get all Phrases");
         return phraseService.findAll();
+    }
+
+    @GetMapping("/group/{slug}")
+    public SluggedGroupDTO getAllPhrasesByGroupSlug(@PathVariable("slug") String groupSlug) {
+        log.debug("REST request to get all Phrases by group slug: " + groupSlug);
+        return phraseService.getAllByGroupSlug(groupSlug);
     }
 
     /**

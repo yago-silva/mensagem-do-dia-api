@@ -35,12 +35,12 @@ public interface PhraseMapper extends EntityMapper<PhraseDTO, Phrase> {
     UserDTO toDtoUserId(User user);
 
     @Named("authorId")
-    @BeanMapping(ignoreByDefault = true)
+    @BeanMapping(ignoreByDefault = false)
     @Mapping(target = "id", source = "id")
     AuthorDTO toDtoAuthorId(Author author);
 
     @Named("categoryId")
-    @BeanMapping(ignoreByDefault = true)
+    @BeanMapping(ignoreByDefault = false)
     @Mapping(target = "id", source = "id")
     CategoryDTO toDtoCategoryId(Category category);
 
@@ -50,7 +50,7 @@ public interface PhraseMapper extends EntityMapper<PhraseDTO, Phrase> {
     }
 
     @Named("tagId")
-    @BeanMapping(ignoreByDefault = true)
+    @BeanMapping(ignoreByDefault = false)
     @Mapping(target = "id", source = "id")
     TagDTO toDtoTagId(Tag tag);
 

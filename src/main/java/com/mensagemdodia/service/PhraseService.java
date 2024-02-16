@@ -2,7 +2,10 @@ package com.mensagemdodia.service;
 
 import com.mensagemdodia.domain.Phrase;
 import com.mensagemdodia.repository.PhraseRepository;
+import com.mensagemdodia.service.dto.CategoryDTO;
 import com.mensagemdodia.service.dto.PhraseDTO;
+import com.mensagemdodia.service.dto.SluggedGroupDTO;
+import com.mensagemdodia.service.dto.TagDTO;
 import com.mensagemdodia.service.mapper.PhraseMapper;
 import java.util.LinkedList;
 import java.util.List;
@@ -88,6 +91,30 @@ public class PhraseService {
     public List<PhraseDTO> findAll() {
         log.debug("Request to get all Phrases");
         return phraseRepository.findAll().stream().map(phraseMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    @Transactional(readOnly = true)
+    public SluggedGroupDTO getAllByGroupSlug(String slug) {
+        log.debug("Request to get all Phrases by group slug: " + slug);
+        LinkedList<PhraseDTO> phrases = phraseRepository
+            .getAllByGroupSlug(slug)
+            .stream()
+            .map(phraseMapper::toDto)
+            .collect(Collectors.toCollection(LinkedList::new));
+
+        Optional<CategoryDTO> optionalCategoryDTO = phrases
+            .stream()
+            .flatMap(phraseDTO -> phraseDTO.getCategories().stream())
+            .filter(categoryDTO -> categoryDTO.getSlug().equals(slug))
+            .findFirst();
+
+        Optional<TagDTO> optionalTagDTO = phrases
+            .stream()
+            .flatMap(phraseDTO -> phraseDTO.getTags().stream())
+            .filter(tagDto -> tagDto.getSlug().equals(slug))
+            .findFirst();
+
+        return new SluggedGroupDTO(optionalCategoryDTO.orElse(null), optionalTagDTO.orElse(null), phrases);
     }
 
     /**

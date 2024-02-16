@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -27,4 +28,21 @@ public interface PhraseRepository extends PhraseRepositoryWithBagRelationships, 
     default Page<Phrase> findAllWithEagerRelationships(Pageable pageable) {
         return this.fetchBagRelationships(this.findAll(pageable));
     }
+
+    //    @Query("SELECT p FROM Phrase p JOIN p.categories c JOIN p.tags t WHERE (c.slug = :slug OR t.slug = :slug)")
+    @Query(
+        "SELECT " +
+        "p FROM Phrase p " +
+        "LEFT JOIN p.categories c " +
+        "LEFT JOIN p.tags t " +
+        "WHERE " +
+        "( " +
+        "(c.slug = :slug AND c.active = true) " +
+        "OR " +
+        "(t.slug = :slug AND t.active = true) " +
+        ") " +
+        "AND " +
+        "p.active = true"
+    )
+    public List<Phrase> getAllByGroupSlug(@Param("slug") String slug);
 }
