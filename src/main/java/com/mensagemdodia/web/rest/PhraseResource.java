@@ -147,9 +147,9 @@ public class PhraseResource {
     }
 
     @GetMapping("/group/{slug}")
-    public SluggedGroupDTO getAllPhrasesByGroupSlug(@PathVariable("slug") String groupSlug) {
+    public ResponseEntity<SluggedGroupDTO> getAllPhrasesByGroupSlug(@PathVariable("slug") String groupSlug) {
         log.debug("REST request to get all Phrases by group slug: " + groupSlug);
-        return phraseService.getAllByGroupSlug(groupSlug);
+        return phraseService.getAllByGroupSlug(groupSlug).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/author/{slug}")

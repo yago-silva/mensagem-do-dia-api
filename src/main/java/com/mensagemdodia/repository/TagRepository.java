@@ -1,5 +1,6 @@
 package com.mensagemdodia.repository;
 
+import com.mensagemdodia.domain.Category;
 import com.mensagemdodia.domain.Tag;
 import java.util.List;
 import java.util.Optional;
@@ -27,4 +28,7 @@ public interface TagRepository extends TagRepositoryWithBagRelationships, JpaRep
     default Page<Tag> findAllWithEagerRelationships(Pageable pageable) {
         return this.fetchBagRelationships(this.findAll(pageable));
     }
+
+    @Query("SELECT t FROM Tag t WHERE t.active = true AND t.slug = :slug")
+    Optional<Tag> findBySlug(String slug);
 }

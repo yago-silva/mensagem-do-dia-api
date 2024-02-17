@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Long> {
-    @Query("SELECT a FROM Author a WHERE a.active = true AND slug = :slug")
+    @Query("SELECT a FROM Author a WHERE a.active = true AND a.slug = :slug")
     Optional<Author> findBySlug(String slug);
 }
