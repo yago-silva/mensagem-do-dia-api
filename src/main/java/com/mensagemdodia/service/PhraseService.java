@@ -1,11 +1,11 @@
 package com.mensagemdodia.service;
 
+import com.mensagemdodia.domain.Author;
 import com.mensagemdodia.domain.Phrase;
+import com.mensagemdodia.repository.AuthorRepository;
 import com.mensagemdodia.repository.PhraseRepository;
-import com.mensagemdodia.service.dto.CategoryDTO;
-import com.mensagemdodia.service.dto.PhraseDTO;
-import com.mensagemdodia.service.dto.SluggedGroupDTO;
-import com.mensagemdodia.service.dto.TagDTO;
+import com.mensagemdodia.service.dto.*;
+import com.mensagemdodia.service.mapper.AuthorMapper;
 import com.mensagemdodia.service.mapper.PhraseMapper;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,9 +31,20 @@ public class PhraseService {
 
     private final PhraseMapper phraseMapper;
 
-    public PhraseService(PhraseRepository phraseRepository, PhraseMapper phraseMapper) {
+    private final AuthorMapper authorMapper;
+
+    private final AuthorRepository authorRepository;
+
+    public PhraseService(
+        PhraseRepository phraseRepository,
+        PhraseMapper phraseMapper,
+        AuthorMapper authorMapper,
+        AuthorRepository authorRepository
+    ) {
         this.phraseRepository = phraseRepository;
         this.phraseMapper = phraseMapper;
+        this.authorMapper = authorMapper;
+        this.authorRepository = authorRepository;
     }
 
     /**
@@ -97,7 +108,7 @@ public class PhraseService {
     public SluggedGroupDTO getAllByGroupSlug(String slug) {
         log.debug("Request to get all Phrases by group slug: " + slug);
         LinkedList<PhraseDTO> phrases = phraseRepository
-            .getAllByGroupSlug(slug)
+            .findAllByGroupSlug(slug)
             .stream()
             .map(phraseMapper::toDto)
             .collect(Collectors.toCollection(LinkedList::new));
@@ -115,6 +126,22 @@ public class PhraseService {
             .findFirst();
 
         return new SluggedGroupDTO(optionalCategoryDTO.orElse(null), optionalTagDTO.orElse(null), phrases);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<AuthorPhrasesDTO> getAllByAuthorSlug(String slug) {
+        log.debug("Request to get all Phrases by author slug: " + slug);
+        Optional<Author> optionalAuthor = authorRepository.findBySlug(slug);
+
+        if (!optionalAuthor.isPresent()) {
+            return Optional.empty();
+        }
+
+        Author author = optionalAuthor.get();
+
+        List<Phrase> phrases = phraseRepository.findAllByAuthorSlug(slug);
+
+        return Optional.of(new AuthorPhrasesDTO(authorMapper.toDto(author), phrases.stream().map(phraseMapper::toDto).toList()));
     }
 
     /**

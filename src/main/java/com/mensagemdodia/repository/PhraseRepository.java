@@ -43,5 +43,16 @@ public interface PhraseRepository extends PhraseRepositoryWithBagRelationships, 
         "AND " +
         "p.active = true"
     )
-    public List<Phrase> getAllByGroupSlug(@Param("slug") String slug);
+    public List<Phrase> findAllByGroupSlug(@Param("slug") String slug);
+
+    @Query(
+        "SELECT " +
+        "p FROM Phrase p " +
+        "LEFT JOIN p.author a " +
+        "WHERE " +
+        "(a.slug = :slug AND a.active = true) " +
+        "AND " +
+        "p.active = true"
+    )
+    public List<Phrase> findAllByAuthorSlug(@Param("slug") String slug);
 }

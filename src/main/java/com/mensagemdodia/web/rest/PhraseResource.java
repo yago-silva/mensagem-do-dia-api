@@ -2,6 +2,7 @@ package com.mensagemdodia.web.rest;
 
 import com.mensagemdodia.repository.PhraseRepository;
 import com.mensagemdodia.service.PhraseService;
+import com.mensagemdodia.service.dto.AuthorPhrasesDTO;
 import com.mensagemdodia.service.dto.PhraseDTO;
 import com.mensagemdodia.service.dto.SluggedGroupDTO;
 import com.mensagemdodia.web.rest.errors.BadRequestAlertException;
@@ -149,6 +150,13 @@ public class PhraseResource {
     public SluggedGroupDTO getAllPhrasesByGroupSlug(@PathVariable("slug") String groupSlug) {
         log.debug("REST request to get all Phrases by group slug: " + groupSlug);
         return phraseService.getAllByGroupSlug(groupSlug);
+    }
+
+    @GetMapping("/author/{slug}")
+    public ResponseEntity<AuthorPhrasesDTO> getAllPhrasesByAuthorSlug(@PathVariable("slug") String authorSlug) {
+        log.debug("REST request to get all Phrases by author slug: " + authorSlug);
+
+        return phraseService.getAllByAuthorSlug(authorSlug).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     /**
