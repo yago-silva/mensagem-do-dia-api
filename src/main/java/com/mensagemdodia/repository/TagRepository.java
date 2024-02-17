@@ -1,6 +1,5 @@
 package com.mensagemdodia.repository;
 
-import com.mensagemdodia.domain.Category;
 import com.mensagemdodia.domain.Tag;
 import java.util.List;
 import java.util.Optional;
@@ -31,4 +30,7 @@ public interface TagRepository extends TagRepositoryWithBagRelationships, JpaRep
 
     @Query("SELECT t FROM Tag t WHERE t.active = true AND t.slug = :slug")
     Optional<Tag> findBySlug(String slug);
+
+    @Query("SELECT t FROM Tag t WHERE t.featured = true AND t.active = true")
+    public List<Tag> getAllFeatured();
 }

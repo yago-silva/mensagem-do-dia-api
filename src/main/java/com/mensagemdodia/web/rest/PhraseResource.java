@@ -5,6 +5,7 @@ import com.mensagemdodia.service.PhraseService;
 import com.mensagemdodia.service.dto.AuthorPhrasesDTO;
 import com.mensagemdodia.service.dto.PhraseDTO;
 import com.mensagemdodia.service.dto.SluggedGroupDTO;
+import com.mensagemdodia.service.dto.TagDTO;
 import com.mensagemdodia.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -186,5 +187,11 @@ public class PhraseResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @GetMapping("/featured")
+    public List<PhraseDTO> getFeaturedTags() {
+        log.debug("REST request to get all featured Phrases");
+        return phraseService.findAllFeatured();
     }
 }

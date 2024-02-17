@@ -192,4 +192,10 @@ public class PhraseService {
         log.debug("Request to delete Phrase : {}", id);
         phraseRepository.deleteById(id);
     }
+
+    @Transactional(readOnly = true)
+    public List<PhraseDTO> findAllFeatured() {
+        log.debug("Request to get all featured Tags");
+        return phraseRepository.getAllFeatured().stream().map(phraseMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
+    }
 }

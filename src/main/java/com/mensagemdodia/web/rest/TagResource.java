@@ -2,6 +2,7 @@ package com.mensagemdodia.web.rest;
 
 import com.mensagemdodia.repository.TagRepository;
 import com.mensagemdodia.service.TagService;
+import com.mensagemdodia.service.dto.AuthorDTO;
 import com.mensagemdodia.service.dto.TagDTO;
 import com.mensagemdodia.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
@@ -169,5 +170,11 @@ public class TagResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @GetMapping("/featured")
+    public List<TagDTO> getFeaturedTags() {
+        log.debug("REST request to get all featured Tags");
+        return tagService.findAllFeatured();
     }
 }

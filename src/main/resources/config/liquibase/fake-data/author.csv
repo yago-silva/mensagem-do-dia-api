@@ -1,2 +1,7 @@
 id;name;created_at;updated_at;featured;active;slug
 1;Biblia Sagrada;2024-02-02T21:58:02;2024-02-03T03:09:50;true;true;biblia
+2;Bob Marley;2024-02-02T21:58:02;2024-02-03T03:09:50;true;true;bob-marley
+3;Madre Teresa de Calcutá;2024-02-02T21:58:02;2024-02-03T03:09:50;true;true;madre-teresa-de-calcuta
+4;Machado de Assis;2024-02-02T21:58:02;2024-02-03T03:09:50;true;true;machado-de-assis
+5;Fernando Pessoa;2024-02-02T21:58:02;2024-02-03T03:09:50;false;true;fernando-pessoa
+6;Platão;2024-02-02T21:58:02;2024-02-03T03:09:50;true;false;platao

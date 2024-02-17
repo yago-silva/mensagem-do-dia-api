@@ -3,6 +3,7 @@ package com.mensagemdodia.web.rest;
 import com.mensagemdodia.repository.AuthorRepository;
 import com.mensagemdodia.service.AuthorService;
 import com.mensagemdodia.service.dto.AuthorDTO;
+import com.mensagemdodia.service.dto.CategoryDTO;
 import com.mensagemdodia.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -175,5 +176,11 @@ public class AuthorResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @GetMapping("/featured")
+    public List<AuthorDTO> getFeaturedAuthors() {
+        log.debug("REST request to get all featured Categories");
+        return authorService.findAllFeatured();
     }
 }

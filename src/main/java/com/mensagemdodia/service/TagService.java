@@ -2,6 +2,7 @@ package com.mensagemdodia.service;
 
 import com.mensagemdodia.domain.Tag;
 import com.mensagemdodia.repository.TagRepository;
+import com.mensagemdodia.service.dto.AuthorDTO;
 import com.mensagemdodia.service.dto.TagDTO;
 import com.mensagemdodia.service.mapper.TagMapper;
 import java.util.LinkedList;
@@ -119,5 +120,11 @@ public class TagService {
     public void delete(Long id) {
         log.debug("Request to delete Tag : {}", id);
         tagRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TagDTO> findAllFeatured() {
+        log.debug("Request to get all featured Tags");
+        return tagRepository.getAllFeatured().stream().map(tagMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 }

@@ -1,6 +1,7 @@
 package com.mensagemdodia.repository;
 
 import com.mensagemdodia.domain.Phrase;
+import com.mensagemdodia.domain.Tag;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -55,4 +56,7 @@ public interface PhraseRepository extends PhraseRepositoryWithBagRelationships, 
         "p.active = true"
     )
     public List<Phrase> findAllByAuthorSlug(@Param("slug") String slug);
+
+    @Query("SELECT p FROM Phrase p WHERE p.featured = true AND p.active = true")
+    public List<Phrase> getAllFeatured();
 }

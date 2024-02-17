@@ -3,6 +3,7 @@ package com.mensagemdodia.service;
 import com.mensagemdodia.domain.Author;
 import com.mensagemdodia.repository.AuthorRepository;
 import com.mensagemdodia.service.dto.AuthorDTO;
+import com.mensagemdodia.service.dto.CategoryDTO;
 import com.mensagemdodia.service.mapper.AuthorMapper;
 import java.util.LinkedList;
 import java.util.List;
@@ -101,6 +102,12 @@ public class AuthorService {
             .filter(author -> author.getPhrase() == null)
             .map(authorMapper::toDto)
             .collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    @Transactional(readOnly = true)
+    public List<AuthorDTO> findAllFeatured() {
+        log.debug("Request to get all featured Authors");
+        return authorRepository.getAllFeatured().stream().map(authorMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     /**
