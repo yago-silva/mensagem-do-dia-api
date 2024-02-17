@@ -88,6 +88,12 @@ public class CategoryService {
         return categoryRepository.findAll().stream().map(categoryMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
+    @Transactional(readOnly = true)
+    public List<CategoryDTO> findAllFeatured() {
+        log.debug("Request to get all featured Categories");
+        return categoryRepository.getAllFeatured().stream().map(categoryMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
+    }
+
     /**
      * Get one category by id.
      *

@@ -29,7 +29,6 @@ public interface PhraseRepository extends PhraseRepositoryWithBagRelationships, 
         return this.fetchBagRelationships(this.findAll(pageable));
     }
 
-    //    @Query("SELECT p FROM Phrase p JOIN p.categories c JOIN p.tags t WHERE (c.slug = :slug OR t.slug = :slug)")
     @Query(
         "SELECT " +
         "p FROM Phrase p " +

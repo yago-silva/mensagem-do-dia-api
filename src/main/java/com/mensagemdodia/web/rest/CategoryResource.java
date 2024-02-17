@@ -143,6 +143,12 @@ public class CategoryResource {
         return categoryService.findAll();
     }
 
+    @GetMapping("/featured")
+    public List<CategoryDTO> getFeaturedCategories() {
+        log.debug("REST request to get all Categories");
+        return categoryService.findAllFeatured();
+    }
+
     /**
      * {@code GET  /categories/:id} : get the "id" category.
      *
