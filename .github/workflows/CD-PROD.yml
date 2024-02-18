@@ -1,0 +1,37 @@
+name: CD-PROD
+
+on:
+  workflow_run:
+    workflows: ['CI-PROD']
+    types:
+      - completed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          lfs: 'true'
+
+      - name: Generate Deployment Package
+        run: zip -r deploy.zip *
+
+      - name: Config aws
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SEC }}
+          aws-region: us-east-1
+
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v22
+        with:
+          aws_access_key: ${{ secrets.AWS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SEC }}
+          application_name: mensagemdodia
+          environment_name: mensagemdodia-prod
+          version_label: 'mensagemdodia-PRD-${{ github.SHA }}'
+          region: sa-east-1
+          deployment_package: deploy.zip
