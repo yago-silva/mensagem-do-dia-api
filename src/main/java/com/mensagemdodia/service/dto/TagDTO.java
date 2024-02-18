@@ -24,6 +24,8 @@ public class TagDTO implements Serializable {
     @NotNull
     private Instant updatedAt;
 
+    private Instant lastPhraseUpdate;
+
     @NotNull
     private Boolean featured;
 
@@ -144,5 +146,13 @@ public class TagDTO implements Serializable {
             ", owner=" + getOwner() +
             ", categories=" + getCategories() +
             "}";
+    }
+
+    public Instant getLastPhraseUpdate() {
+        return lastPhraseUpdate;
+    }
+
+    public void setLastPhraseUpdate(Instant lastPhraseUpdate) {
+        this.lastPhraseUpdate = lastPhraseUpdate;
     }
 }

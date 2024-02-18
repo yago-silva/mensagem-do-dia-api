@@ -5,6 +5,7 @@ import com.mensagemdodia.repository.TagRepository;
 import com.mensagemdodia.service.dto.AuthorDTO;
 import com.mensagemdodia.service.dto.TagDTO;
 import com.mensagemdodia.service.mapper.TagMapper;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +44,8 @@ public class TagService {
     public TagDTO save(TagDTO tagDTO) {
         log.debug("Request to save Tag : {}", tagDTO);
         Tag tag = tagMapper.toEntity(tagDTO);
+        tag.createdAt(Instant.now());
+        tag.updatedAt(Instant.now());
         tag = tagRepository.save(tag);
         return tagMapper.toDto(tag);
     }
@@ -56,6 +59,7 @@ public class TagService {
     public TagDTO update(TagDTO tagDTO) {
         log.debug("Request to update Tag : {}", tagDTO);
         Tag tag = tagMapper.toEntity(tagDTO);
+        tag.updatedAt(Instant.now());
         tag = tagRepository.save(tag);
         return tagMapper.toDto(tag);
     }
@@ -72,6 +76,7 @@ public class TagService {
         return tagRepository
             .findById(tagDTO.getId())
             .map(existingTag -> {
+                existingTag.updatedAt(Instant.now());
                 tagMapper.partialUpdate(existingTag, tagDTO);
 
                 return existingTag;

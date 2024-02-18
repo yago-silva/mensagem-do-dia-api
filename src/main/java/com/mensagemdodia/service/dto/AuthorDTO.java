@@ -22,6 +22,8 @@ public class AuthorDTO implements Serializable {
     @NotNull
     private Instant updatedAt;
 
+    private Instant lastPhraseUpdate;
+
     @NotNull
     private Boolean featured;
 
@@ -131,5 +133,13 @@ public class AuthorDTO implements Serializable {
             ", slug='" + getSlug() + "'" +
             ", owner=" + getOwner() +
             "}";
+    }
+
+    public Instant getLastPhraseUpdate() {
+        return lastPhraseUpdate;
+    }
+
+    public void setLastPhraseUpdate(Instant lastPhraseUpdate) {
+        this.lastPhraseUpdate = lastPhraseUpdate;
     }
 }

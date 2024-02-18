@@ -5,6 +5,7 @@ import com.mensagemdodia.repository.AuthorRepository;
 import com.mensagemdodia.service.dto.AuthorDTO;
 import com.mensagemdodia.service.dto.CategoryDTO;
 import com.mensagemdodia.service.mapper.AuthorMapper;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +43,8 @@ public class AuthorService {
     public AuthorDTO save(AuthorDTO authorDTO) {
         log.debug("Request to save Author : {}", authorDTO);
         Author author = authorMapper.toEntity(authorDTO);
+        author.createdAt(Instant.now());
+        author.updatedAt(Instant.now());
         author = authorRepository.save(author);
         return authorMapper.toDto(author);
     }
@@ -55,6 +58,7 @@ public class AuthorService {
     public AuthorDTO update(AuthorDTO authorDTO) {
         log.debug("Request to update Author : {}", authorDTO);
         Author author = authorMapper.toEntity(authorDTO);
+        author.updatedAt(Instant.now());
         author = authorRepository.save(author);
         return authorMapper.toDto(author);
     }
@@ -71,6 +75,7 @@ public class AuthorService {
         return authorRepository
             .findById(authorDTO.getId())
             .map(existingAuthor -> {
+                existingAuthor.updatedAt(Instant.now());
                 authorMapper.partialUpdate(existingAuthor, authorDTO);
 
                 return existingAuthor;

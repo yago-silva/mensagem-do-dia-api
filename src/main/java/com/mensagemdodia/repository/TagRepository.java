@@ -28,9 +28,9 @@ public interface TagRepository extends TagRepositoryWithBagRelationships, JpaRep
         return this.fetchBagRelationships(this.findAll(pageable));
     }
 
-    @Query("SELECT t FROM Tag t WHERE t.active = true AND t.slug = :slug")
+    @Query("SELECT t FROM Tag t WHERE t.active = true AND t.slug = :slug ORDER BY t.updatedAt DESC")
     Optional<Tag> findBySlug(String slug);
 
-    @Query("SELECT t FROM Tag t WHERE t.featured = true AND t.active = true")
+    @Query("SELECT t FROM Tag t WHERE t.featured = true AND t.active = true ORDER BY t.updatedAt DESC")
     public List<Tag> getAllFeatured();
 }

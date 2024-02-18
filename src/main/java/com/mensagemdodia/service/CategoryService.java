@@ -4,6 +4,7 @@ import com.mensagemdodia.domain.Category;
 import com.mensagemdodia.repository.CategoryRepository;
 import com.mensagemdodia.service.dto.CategoryDTO;
 import com.mensagemdodia.service.mapper.CategoryMapper;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +41,8 @@ public class CategoryService {
     public CategoryDTO save(CategoryDTO categoryDTO) {
         log.debug("Request to save Category : {}", categoryDTO);
         Category category = categoryMapper.toEntity(categoryDTO);
+        category.createdAt(Instant.now());
+        category.updatedAt(Instant.now());
         category = categoryRepository.save(category);
         return categoryMapper.toDto(category);
     }
@@ -53,6 +56,7 @@ public class CategoryService {
     public CategoryDTO update(CategoryDTO categoryDTO) {
         log.debug("Request to update Category : {}", categoryDTO);
         Category category = categoryMapper.toEntity(categoryDTO);
+        category.updatedAt(Instant.now());
         category = categoryRepository.save(category);
         return categoryMapper.toDto(category);
     }
@@ -69,6 +73,7 @@ public class CategoryService {
         return categoryRepository
             .findById(categoryDTO.getId())
             .map(existingCategory -> {
+                existingCategory.updatedAt(Instant.now());
                 categoryMapper.partialUpdate(existingCategory, categoryDTO);
 
                 return existingCategory;

@@ -12,6 +12,7 @@ import com.mensagemdodia.service.mapper.AuthorMapper;
 import com.mensagemdodia.service.mapper.CategoryMapper;
 import com.mensagemdodia.service.mapper.PhraseMapper;
 import com.mensagemdodia.service.mapper.TagMapper;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -77,6 +78,8 @@ public class PhraseService {
     public PhraseDTO save(PhraseDTO phraseDTO) {
         log.debug("Request to save Phrase : {}", phraseDTO);
         Phrase phrase = phraseMapper.toEntity(phraseDTO);
+        phrase.createdAt(Instant.now());
+        phrase.updatedAt(Instant.now());
         phrase = phraseRepository.save(phrase);
         return phraseMapper.toDto(phrase);
     }
@@ -90,6 +93,7 @@ public class PhraseService {
     public PhraseDTO update(PhraseDTO phraseDTO) {
         log.debug("Request to update Phrase : {}", phraseDTO);
         Phrase phrase = phraseMapper.toEntity(phraseDTO);
+        phrase.updatedAt(Instant.now());
         phrase = phraseRepository.save(phrase);
         return phraseMapper.toDto(phrase);
     }
@@ -106,6 +110,7 @@ public class PhraseService {
         return phraseRepository
             .findById(phraseDTO.getId())
             .map(existingPhrase -> {
+                existingPhrase.updatedAt(Instant.now());
                 phraseMapper.partialUpdate(existingPhrase, phraseDTO);
 
                 return existingPhrase;

@@ -4,6 +4,7 @@ import com.mensagemdodia.domain.Media;
 import com.mensagemdodia.repository.MediaRepository;
 import com.mensagemdodia.service.dto.MediaDTO;
 import com.mensagemdodia.service.mapper.MediaMapper;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +41,8 @@ public class MediaService {
     public MediaDTO save(MediaDTO mediaDTO) {
         log.debug("Request to save Media : {}", mediaDTO);
         Media media = mediaMapper.toEntity(mediaDTO);
+        media.createdAt(Instant.now());
+        media.updatedAt(Instant.now());
         media = mediaRepository.save(media);
         return mediaMapper.toDto(media);
     }
@@ -53,6 +56,7 @@ public class MediaService {
     public MediaDTO update(MediaDTO mediaDTO) {
         log.debug("Request to update Media : {}", mediaDTO);
         Media media = mediaMapper.toEntity(mediaDTO);
+        media.updatedAt(Instant.now());
         media = mediaRepository.save(media);
         return mediaMapper.toDto(media);
     }
@@ -69,6 +73,7 @@ public class MediaService {
         return mediaRepository
             .findById(mediaDTO.getId())
             .map(existingMedia -> {
+                existingMedia.updatedAt(Instant.now());
                 mediaMapper.partialUpdate(existingMedia, mediaDTO);
 
                 return existingMedia;

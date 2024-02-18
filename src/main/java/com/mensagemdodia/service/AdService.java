@@ -4,6 +4,7 @@ import com.mensagemdodia.domain.Ad;
 import com.mensagemdodia.repository.AdRepository;
 import com.mensagemdodia.service.dto.AdDTO;
 import com.mensagemdodia.service.mapper.AdMapper;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +43,8 @@ public class AdService {
     public AdDTO save(AdDTO adDTO) {
         log.debug("Request to save Ad : {}", adDTO);
         Ad ad = adMapper.toEntity(adDTO);
+        ad.createdAt(Instant.now());
+        ad.updatedAt(Instant.now());
         ad = adRepository.save(ad);
         return adMapper.toDto(ad);
     }
@@ -55,6 +58,7 @@ public class AdService {
     public AdDTO update(AdDTO adDTO) {
         log.debug("Request to update Ad : {}", adDTO);
         Ad ad = adMapper.toEntity(adDTO);
+        ad.updatedAt(Instant.now());
         ad = adRepository.save(ad);
         return adMapper.toDto(ad);
     }
@@ -71,6 +75,7 @@ public class AdService {
         return adRepository
             .findById(adDTO.getId())
             .map(existingAd -> {
+                existingAd.updatedAt(Instant.now());
                 adMapper.partialUpdate(existingAd, adDTO);
 
                 return existingAd;

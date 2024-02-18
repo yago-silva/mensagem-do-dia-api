@@ -22,6 +22,8 @@ public class CategoryDTO implements Serializable {
     @NotNull
     private Instant updatedAt;
 
+    private Instant lastPhraseUpdate;
+
     @NotNull
     private Boolean featured;
 
@@ -142,5 +144,13 @@ public class CategoryDTO implements Serializable {
             ", owner=" + getOwner() +
             ", category=" + getCategory() +
             "}";
+    }
+
+    public Instant getLastPhraseUpdate() {
+        return lastPhraseUpdate;
+    }
+
+    public void setLastPhraseUpdate(Instant lastPhraseUpdate) {
+        this.lastPhraseUpdate = lastPhraseUpdate;
     }
 }

@@ -55,6 +55,10 @@ public class Author implements Serializable {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "author")
     private Phrase phrase;
 
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "author")
+    @JsonIgnoreProperties(value = { "owner", "author", "media", "categories", "tags", "author" }, allowSetters = true)
+    private Set<Phrase> phrases = new HashSet<>();
+
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "authors")
     @JsonIgnoreProperties(value = { "owner", "media", "categories", "tags", "authors" }, allowSetters = true)
     private Set<Ad> ads = new HashSet<>();
@@ -246,5 +250,13 @@ public class Author implements Serializable {
             ", active='" + getActive() + "'" +
             ", slug='" + getSlug() + "'" +
             "}";
+    }
+
+    public Set<Phrase> getPhrases() {
+        return phrases;
+    }
+
+    public void setPhrases(Set<Phrase> phrases) {
+        this.phrases = phrases;
     }
 }

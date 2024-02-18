@@ -42,7 +42,8 @@ public interface PhraseRepository extends PhraseRepositoryWithBagRelationships, 
         "(t.slug = :slug AND t.active = true) " +
         ") " +
         "AND " +
-        "p.active = true"
+        "p.active = true " +
+        "ORDER BY p.updatedAt DESC"
     )
     public List<Phrase> findAllByGroupSlug(@Param("slug") String slug);
 
@@ -53,10 +54,11 @@ public interface PhraseRepository extends PhraseRepositoryWithBagRelationships, 
         "WHERE " +
         "(a.slug = :slug AND a.active = true) " +
         "AND " +
-        "p.active = true"
+        "p.active = true " +
+        "ORDER BY p.updatedAt DESC"
     )
     public List<Phrase> findAllByAuthorSlug(@Param("slug") String slug);
 
-    @Query("SELECT p FROM Phrase p WHERE p.featured = true AND p.active = true")
+    @Query("SELECT p FROM Phrase p WHERE p.featured = true AND p.active = true ORDER BY p.updatedAt DESC")
     public List<Phrase> getAllFeatured();
 }
