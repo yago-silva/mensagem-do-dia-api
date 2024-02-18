@@ -1,6 +1,6 @@
 services:
   app:
-    image: yagosilvadev/mensagemdodia:64291b6
+    image: yagosilvadev/mensagemdodia:latest
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
       - SPRING_PROFILES_ACTIVE=prod,api-docs
