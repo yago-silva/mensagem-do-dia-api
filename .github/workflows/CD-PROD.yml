@@ -30,8 +30,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_KEY }}
           aws_secret_key: ${{ secrets.AWS_SEC }}
-          application_name: mensagemdodia
-          environment_name: mensagemdodia-prod
-          version_label: 'mensagemdodia-PRD-${{ github.SHA }}'
-          region: sa-east-1
+          application_name: api-mensagem-do-dia
+          environment_name: api-mensagem-do-dia-prd
+          version_label: 'api-mensagemdodia-PRD-${{ github.SHA }}'
+          region: us-east-1
           deployment_package: deploy.zip
