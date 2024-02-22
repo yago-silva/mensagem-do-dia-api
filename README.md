@@ -1,5 +1,15 @@
 # MensagemDoDia
 
+## Backup database
+
+### Backup
+
+docker exec database /usr/bin/mysqldump -u root --password=<PASSWORD> mensagemdodia > backup\_$(date +%s).sql
+
+### Restore
+
+cat backup_1708565796.sql | docker exec -i database /usr/bin/mysql -u root --password=<PASSWORD> mensagemdodia
+
 This application was generated using JHipster 8.1.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v8.1.0](https://www.jhipster.tech/documentation-archive/v8.1.0).
 
 ## Project Structure
