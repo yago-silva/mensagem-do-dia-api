@@ -1,6 +1,6 @@
 services:
   app:
-    image: yagosilvadev/mensagemdodia:testando
+    image: yagosilvadev/mensagemdodia:latest
     container_name: api
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
@@ -11,7 +11,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
     ports:
-      - 8080:8080
+      - 80:8080
     healthcheck:
       test:
         - CMD

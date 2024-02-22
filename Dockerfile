@@ -12,4 +12,4 @@ RUN npm --version
 
 RUN ./gradlew clean
 
-CMD ./gradlew -Pprod
+CMD ./gradlew -Pprod --warning-mode all
