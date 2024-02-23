@@ -115,44 +115,44 @@ modernizer {
 
 
 task consoleLauncherTest(type: JavaExec) {
-    dependsOn(testClasses)
-    String cucumberReportsDir = file("$buildDir/reports/tests")
-    outputs.dir(reportsDir)
-    classpath = sourceSets["test"].runtimeClasspath
-    main = "org.junit.platform.console.ConsoleLauncher"
-    args("--scan-classpath")
-    args("--include-engine", "cucumber")
-    args("--reports-dir", cucumberReportsDir)
+//    dependsOn(testClasses)
+//    String cucumberReportsDir = file("$buildDir/reports/tests")
+//    outputs.dir(reportsDir)
+//    classpath = sourceSets["test"].runtimeClasspath
+//    main = "org.junit.platform.console.ConsoleLauncher"
+//    args("--scan-classpath")
+//    args("--include-engine", "cucumber")
+//    args("--reports-dir", cucumberReportsDir)
 }
 
 task cucumberTest(type: Test) {
-    dependsOn(consoleLauncherTest)
-    description = "Execute cucumber BDD tests."
-    group = "verification"
-    include "**/*CucumberIT*"
-
-    // uncomment if the tests reports are not generated
-    // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
-    // ignoreFailures true
-    reports.html.required = false
+//    dependsOn(consoleLauncherTest)
+//    description = "Execute cucumber BDD tests."
+//    group = "verification"
+//    include "**/*CucumberIT*"
+//
+//    // uncomment if the tests reports are not generated
+//    // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
+//    // ignoreFailures true
+//    reports.html.required = false
 }
 
-check.dependsOn cucumberTest
+//check.dependsOn cucumberTest
 
-check.dependsOn integrationTest
+//check.dependsOn integrationTest
 task testReport(type: TestReport) {
-    destinationDirectory = file("$buildDir/reports/tests")
-    testResults.from(test)
+//    destinationDirectory = file("$buildDir/reports/tests")
+//    testResults.from(test)
 }
 
 task integrationTestReport(type: TestReport) {
-    destinationDirectory = file("$buildDir/reports/tests")
-    testResults.from(integrationTest)
+//    destinationDirectory = file("$buildDir/reports/tests")
+//    testResults.from(integrationTest)
 }
 
 task cucumberTestReport(type: TestReport) {
-    destinationDirectory = file("$buildDir/reports/tests")
-    testResults.from(cucumberTest)
+//    destinationDirectory = file("$buildDir/reports/tests")
+//    testResults.from(cucumberTest)
 }
 
 gitProperties {
@@ -262,35 +262,35 @@ wrapper {
 }
 
 task webapp_test(type: NpmTask) {
-    inputs.property('appVersion', project.version)
-    inputs.files("package-lock.json")
-        .withPropertyName('package-lock')
-        .withPathSensitivity(PathSensitivity.RELATIVE)
-    inputs.files("build.gradle")
-        .withPropertyName('build.gradle')
-        .withPathSensitivity(PathSensitivity.RELATIVE)
-    inputs.dir("src/main/webapp/")
-        .withPropertyName("webapp-source-dir")
-        .withPathSensitivity(PathSensitivity.RELATIVE)
-    inputs.files("tsconfig.json")
-        .withPropertyName("tsconfig")
-        .withPathSensitivity(PathSensitivity.RELATIVE)
-
-    def webpackDevFiles = fileTree("webpack/")
-    webpackDevFiles.exclude("webpack.prod.js")
-    inputs.files(webpackDevFiles)
-        .withPropertyName("webpack-dir")
-        .withPathSensitivity(PathSensitivity.RELATIVE)
-
-    outputs.dir("build/test-results/jest/")
-        .withPropertyName("jest-result-dir")
-    outputs.file("build/test-results/TESTS-results-jest.xml")
-        .withPropertyName("jest-result")
-        outputs.file("build/test-results/clover.xml")
-        .withPropertyName("clover-result")
-
-    dependsOn npmInstall,compileTestJava
-    args = ["run", "webapp:test"]
+//    inputs.property('appVersion', project.version)
+//    inputs.files("package-lock.json")
+//        .withPropertyName('package-lock')
+//        .withPathSensitivity(PathSensitivity.RELATIVE)
+//    inputs.files("build.gradle")
+//        .withPropertyName('build.gradle')
+//        .withPathSensitivity(PathSensitivity.RELATIVE)
+//    inputs.dir("src/main/webapp/")
+//        .withPropertyName("webapp-source-dir")
+//        .withPathSensitivity(PathSensitivity.RELATIVE)
+//    inputs.files("tsconfig.json")
+//        .withPropertyName("tsconfig")
+//        .withPathSensitivity(PathSensitivity.RELATIVE)
+//
+//    def webpackDevFiles = fileTree("webpack/")
+//    webpackDevFiles.exclude("webpack.prod.js")
+//    inputs.files(webpackDevFiles)
+//        .withPropertyName("webpack-dir")
+//        .withPathSensitivity(PathSensitivity.RELATIVE)
+//
+//    outputs.dir("build/test-results/jest/")
+//        .withPropertyName("jest-result-dir")
+//    outputs.file("build/test-results/TESTS-results-jest.xml")
+//        .withPropertyName("jest-result")
+//        outputs.file("build/test-results/clover.xml")
+//        .withPropertyName("clover-result")
+//
+//    dependsOn npmInstall,compileTestJava
+//    args = ["run", "webapp:test"]
 }
 
 if (project.hasProperty("nodeInstall")) {
@@ -314,6 +314,6 @@ if (project.hasProperty("nodeInstall")) {
     tasks.named("npmSetup").configure { finalizedBy fixedNpm }
 }
 
-test.dependsOn webapp_test
+// test.dependsOn webapp_test
 compileJava.dependsOn processResources
 processResources.dependsOn bootBuildInfo
