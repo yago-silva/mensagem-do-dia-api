@@ -26,6 +26,8 @@ RUN node --version
 
 RUN npm --version
 
+RUN export PATH=$PATH:/usr/local/bin/node:/usr/local/bin/npm
+
 WORKDIR /
 
 RUN ./gradlew clean
