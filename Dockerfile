@@ -2,8 +2,6 @@
 
 FROM openjdk:17-jdk-alpine
 
-COPY . .
-
 #RUN apk update && apk add nodejs && apk add npm
 #RUN apk update && apk add nvm && nvm install 10
 #RUN npm install -g npm@^18.17.0
@@ -28,7 +26,7 @@ RUN npm --version
 
 RUN export PATH=$PATH:/usr/local/bin/node:/usr/local/bin/npm
 
-WORKDIR /
+COPY . .
 
 RUN ./gradlew clean
 
