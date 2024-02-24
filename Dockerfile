@@ -6,7 +6,7 @@ FROM openjdk:17-jdk-alpine
 #RUN apk update && apk add nvm && nvm install 10
 #RUN npm install -g npm@^18.17.0
 
-ENV NODE_PACKAGE_URL=https://unofficial-builds.nodejs.org/download/release/v18.17.0/node-v18.17.0-linux-x64-musl.tar.gz
+ENV NODE_PACKAGE_URL=https://unofficial-builds.nodejs.org/download/release/v18.18.2/node-v18.18.2-linux-x64-musl.tar.gz
 
 RUN apk add libstdc++
 WORKDIR /opt
