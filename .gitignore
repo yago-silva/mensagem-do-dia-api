@@ -77,7 +77,6 @@ out/
 ######################
 # Gradle
 ######################
-.gradle/
 /build/
 
 ######################
@@ -128,11 +127,6 @@ Desktop.ini
 *.*~
 *~
 .merge_file*
-
-######################
-# Gradle Wrapper
-######################
-!gradle/wrapper/gradle-wrapper.jar
 
 ######################
 # Maven Wrapper
