@@ -102,9 +102,7 @@ public class AuthorService {
     @Transactional(readOnly = true)
     public List<AuthorDTO> findAllWherePhraseIsNull() {
         log.debug("Request to get all authors where Phrase is null");
-        return StreamSupport
-            .stream(authorRepository.findAll().spliterator(), false)
-            .filter(author -> author.getPhrase() == null)
+        return StreamSupport.stream(authorRepository.findAll().spliterator(), false)
             .map(authorMapper::toDto)
             .collect(Collectors.toCollection(LinkedList::new));
     }

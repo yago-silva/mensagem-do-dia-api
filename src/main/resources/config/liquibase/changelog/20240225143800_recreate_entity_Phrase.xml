@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--
+        Added the entity Phrase.
+    -->
+    <changeSet id="20240225144004-1" author="jhipster">
+        <createTable tableName="phrase2">
+            <column name="id" type="bigint" autoIncrement="true" startWith="1500">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="content" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_at" type="${datetimeType}">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated_at" type="${datetimeType}">
+                <constraints nullable="false" />
+            </column>
+            <column name="featured" type="boolean">
+                <constraints nullable="false" />
+            </column>
+            <column name="active" type="boolean">
+                <constraints nullable="false" />
+            </column>
+            <column name="slug" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="owner_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="author_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
+        </createTable>
+        <dropDefaultValue tableName="phrase" columnName="created_at" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="phrase" columnName="updated_at" columnDataType="${datetimeType}"/>
+    </changeSet>
+
+
+
+    <changeSet id="20240225144004-1-relations" author="jhipster">
+
+        <createTable tableName="rel_phrase2__category">
+            <column name="category_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phrase_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="phrase_id, category_id" tableName="rel_phrase2__category"/>
+
+        <createTable tableName="rel_phrase2__tag">
+            <column name="tag_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phrase_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="phrase_id, tag_id" tableName="rel_phrase2__tag"/>
+    </changeSet>
+
+
+
+    <changeSet id="20240225144004-1-clone-data" author="jhipster">
+        <sql dbms="!h2, oracle, mysql"
+             endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">insert into phrase2 (select * from phrase)
+        </sql>
+
+
+        <sql dbms="!h2, oracle, mysql"
+             endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">insert into rel_phrase2__category (select * from rel_phrase__category)
+        </sql>
+
+        <sql dbms="!h2, oracle, mysql"
+             endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">insert into rel_phrase2__tag (select * from rel_phrase__tag)
+        </sql>
+    </changeSet>
+
+
+    <changeSet  author="20240225144004-1-drop-old-table"  id="dropTable-phrase">
+        <dropTable  cascadeConstraints="true"
+                    schemaName="public"
+                    tableName="phrase"/>
+
+        <dropTable  cascadeConstraints="true"
+                    schemaName="public"
+                    tableName="rel_phrase__category"/>
+
+        <dropTable  cascadeConstraints="true"
+                    schemaName="public"
+                    tableName="rel_phrase__tag"/>
+    </changeSet>
+
+
+    <changeSet  author="20240225144004-1-rename-new-tables"  id="renameTables">
+        <renameTable  newTableName="phrase"
+                      oldTableName="phrase2"
+                      schemaName="public"/>
+
+        <renameTable  newTableName="rel_phrase__category"
+                      oldTableName="rel_phrase2__category"
+                      schemaName="public"/>
+
+        <renameTable  newTableName="rel_phrase__tag"
+                      oldTableName="rel_phrase2__tag"
+                      schemaName="public"/>
+    </changeSet>
+
+
+
+
+
+
+
+
+
+
+
+
+    <changeSet id="20240225144004-add-constraints" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="owner_id"
+                                 baseTableName="phrase"
+                                 constraintName="fk_phrase__owner_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+        />
+
+        <addForeignKeyConstraint baseColumnNames="author_id"
+                                 baseTableName="phrase"
+                                 constraintName="fk_phrase__author_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="author"
+        />
+
+        <addForeignKeyConstraint baseColumnNames="phrase_id"
+                                 baseTableName="rel_phrase__category"
+                                 constraintName="fk_rel_phrase__category__phrase_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="phrase"
+        />
+
+        <addForeignKeyConstraint baseColumnNames="category_id"
+                                 baseTableName="rel_phrase__category"
+                                 constraintName="fk_rel_phrase__category__category_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="category"
+        />
+
+        <addForeignKeyConstraint baseColumnNames="phrase_id"
+                                 baseTableName="rel_phrase__tag"
+                                 constraintName="fk_rel_phrase__tag__phrase_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="phrase"
+        />
+
+        <addForeignKeyConstraint baseColumnNames="tag_id"
+                                 baseTableName="rel_phrase__tag"
+                                 constraintName="fk_rel_phrase__tag__tag_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tag"
+        />
+    </changeSet>
+
+
+</databaseChangeLog>
