@@ -1,9 +1,7 @@
 services:
   app:
-    image: yagosilvadev/mensagemdodia:testando
+    image: yagosilvadev/mensagemdodia:${GITHUB_SHA}
     container_name: api
-    #    entrypoint: ./gradlew -Pprod --warning-mode all --stacktrace
-    entrypoint: whereis node
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
       - SPRING_PROFILES_ACTIVE=prod,api-docs
