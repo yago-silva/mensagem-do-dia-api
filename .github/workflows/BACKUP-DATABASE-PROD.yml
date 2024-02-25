@@ -25,5 +25,5 @@ jobs:
           aws configure set default.region us-east-1
           aws s3 cp ${BACKUP_FILENAME} s3://${{ secrets.AWS_BUCKET }}/database-backups/
           rm ${BACKUP_FILENAME}
-          docker image prune
+          docker rmi -f $(docker images -f "dangling=true" -q)
           docker rm $(docker ps --filter "status=exited" -q)
