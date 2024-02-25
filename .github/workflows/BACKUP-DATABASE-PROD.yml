@@ -1,11 +1,9 @@
-name: CD-PROD
+name: BACKUP-DATABASE-PROD
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ['CI-PROD']
-    types:
-      - completed
+  schedule:
+    - cron: '0 3 * * *'
 
 jobs:
   build:
@@ -19,13 +17,10 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install sshpass
           sshpass -p '${{ secrets.SSH_PASSWORD }}' ssh -v -o StrictHostKeyChecking=no root@109.199.101.105 <<'ENDSSH'
+          export BACKUP_FILENAME=backup-$(date +"%d-%m-%y-%T").sql
+          mysqldump -h 0.0.0.0 -p${{ secrets.DB_PASSWORD }} mensagemdodia > ${BACKUP_FILENAME}
           apt install awscli --silent
           aws configure set aws_access_key_id ${{ secrets.AWS_KEY }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SEC }}
           aws configure set default.region us-east-1
-          aws s3 cp s3://${{ secrets.AWS_BUCKET }}/docker-compose.yml docker-compose.yml
-          export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-          export GITHUB_SHA=${{ github.sha }}
-          docker pull yagosilvadev/mensagemdodia:${{ github.sha }}
-          docker-compose down
-          docker-compose up -d
+          aws s3 cp ${BACKUP_FILENAME} s3://${{ secrets.AWS_BUCKET }}/database-backups
