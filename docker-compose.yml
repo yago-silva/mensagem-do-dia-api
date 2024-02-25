@@ -2,8 +2,8 @@ services:
   app:
     image: yagosilvadev/mensagemdodia:testando
     container_name: api
-    entrypoint: ./gradlew -Pprod --warning-mode all --stacktrace
-    #    entrypoint: echo $PATH
+    #    entrypoint: ./gradlew -Pprod --warning-mode all --stacktrace
+    entrypoint: whereis node
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
       - SPRING_PROFILES_ACTIVE=prod,api-docs

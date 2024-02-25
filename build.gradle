@@ -293,26 +293,26 @@ task webapp_test(type: NpmTask) {
 //    args = ["run", "webapp:test"]
 }
 
-if (project.hasProperty("nodeInstall")) {
-    node {
-        version = "18.18.2"
-        npmVersion = "10.2.4"
-        download = true
-    }
-
-    // Copy local node and npm to a fixed location for npmw
-    def fixedNode = tasks.register("fixedNode", Copy) {
-        from nodeSetup
-        into 'build/node'
-    }
-    tasks.named("nodeSetup").configure { finalizedBy fixedNode }
-
-    def fixedNpm = tasks.register("fixedNpm", Copy) {
-        from npmSetup
-        into 'build/node'
-    }
-    tasks.named("npmSetup").configure { finalizedBy fixedNpm }
-}
+//if (project.hasProperty("nodeInstall")) {
+//    node {
+//        version = "18.18.2"
+//        npmVersion = "10.2.4"
+//        download = true
+//    }
+//
+//    // Copy local node and npm to a fixed location for npmw
+//    def fixedNode = tasks.register("fixedNode", Copy) {
+//        from nodeSetup
+//        into 'build/node'
+//    }
+//    tasks.named("nodeSetup").configure { finalizedBy fixedNode }
+//
+//    def fixedNpm = tasks.register("fixedNpm", Copy) {
+//        from npmSetup
+//        into 'build/node'
+//    }
+//    tasks.named("npmSetup").configure { finalizedBy fixedNpm }
+//}
 
 // test.dependsOn webapp_test
 compileJava.dependsOn processResources
