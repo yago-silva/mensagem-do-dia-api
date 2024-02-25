@@ -51,11 +51,7 @@ public class Author implements Serializable {
     @JoinColumn(unique = true)
     private User owner;
 
-    @JsonIgnoreProperties(value = { "owner", "author", "media", "categories", "tags" }, allowSetters = true)
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "author")
-    private Phrase phrase;
-
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "author")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
     @JsonIgnoreProperties(value = { "owner", "author", "media", "categories", "tags", "author" }, allowSetters = true)
     private Set<Phrase> phrases = new HashSet<>();
 
@@ -166,25 +162,6 @@ public class Author implements Serializable {
 
     public Author owner(User user) {
         this.setOwner(user);
-        return this;
-    }
-
-    public Phrase getPhrase() {
-        return this.phrase;
-    }
-
-    public void setPhrase(Phrase phrase) {
-        if (this.phrase != null) {
-            this.phrase.setAuthor(null);
-        }
-        if (phrase != null) {
-            phrase.setAuthor(this);
-        }
-        this.phrase = phrase;
-    }
-
-    public Author phrase(Phrase phrase) {
-        this.setPhrase(phrase);
         return this;
     }
 

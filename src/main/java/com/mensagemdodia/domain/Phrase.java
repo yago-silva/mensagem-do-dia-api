@@ -47,12 +47,12 @@ public class Phrase implements Serializable {
     @Column(name = "slug", nullable = false)
     private String slug;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
     private User owner;
 
     @JsonIgnoreProperties(value = { "owner", "phrase", "ads" }, allowSetters = true)
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(unique = true)
     private Author author;
 
