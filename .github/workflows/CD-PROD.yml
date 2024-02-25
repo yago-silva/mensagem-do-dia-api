@@ -31,5 +31,7 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_SEC }}
           aws configure set default.region us-east-1
           aws s3 cp s3://${{ secrets.AWS_BUCKET }}/docker-compose.yml docker-compose.yml
-
-#          export DB_PASSWORD=$db_password && export GITHUB_SHA=$git_sha && docker-compose up -d
+          export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          export GITHUB_SHA=${{ github.sha }}
+          docker-compose down
+          docker-compose up -d
