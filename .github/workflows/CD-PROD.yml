@@ -15,16 +15,24 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v4
 
-      - name: Run docker-compose
-        shell: bash
-        env:
-          aws_key_id: ${{ secrets.AWS_KEY }}
-          aws_secret_access_key: ${{ secrets.AWS_SEC }}
-          aws_s3_bucket: ${{ secrets.AWS_BUCKET }}
-          db_password: ${{ secrets.DB_PASSWORD }}
-          git_sha: ${{ github.sha }}
-        run: |
-          sudo apt-get update && sudo apt-get install sshpass
-          sshpass -p${{ secrets.SSH_PASSWORD }} ssh -tt root@109.199.101.105 'apt install awscli --silent && aws configure set aws_access_key_id $aws_key_id && aws configure set aws_secret_access_key $aws_secret_access_key && aws configure set default.region us-east-1 && aws s3 cp s3://$aws_s3_bucket/docker-compose.yml docker-compose.yml'
+      - name: Run sshpass commands
+        uses: matheusvanzan/sshpass-action@v2
+        with:
+          host: 109.199.101.105
+          user: root
+          pass: ${{ secrets.SSH_PASSWORD }}
+          run: |
+            sshpass -p${{ secrets.SSH_PASSWORD }} ssh -tt root@109.199.101.105 'apt install awscli --silent && aws configure set aws_access_key_id $aws_key_id && aws configure set aws_secret_access_key $aws_secret_access_key && aws configure set default.region us-east-1 && aws s3 cp s3://$aws_s3_bucket/docker-compose.yml docker-compose.yml'
 
+#      - name: Run docker-compose
+#        shell: bash
+#        env:
+#          aws_key_id: ${{ secrets.AWS_KEY }}
+#          aws_secret_access_key: ${{ secrets.AWS_SEC }}
+#          aws_s3_bucket: ${{ secrets.AWS_BUCKET }}
+#          db_password: ${{ secrets.DB_PASSWORD }}
+#          git_sha: ${{ github.sha }}
+#        run: |
+#          sudo apt-get update && sudo apt-get install sshpass
+#          sshpass -p${{ secrets.SSH_PASSWORD }} ssh -tt root@109.199.101.105 'apt install awscli --silent && aws configure set aws_access_key_id $aws_key_id && aws configure set aws_secret_access_key $aws_secret_access_key && aws configure set default.region us-east-1 && aws s3 cp s3://$aws_s3_bucket/docker-compose.yml docker-compose.yml'
 #          sshpass -p${{ secrets.SSH_PASSWORD }} ssh -tt root@109.199.101.105 'export DB_PASSWORD=$db_password && export GITHUB_SHA=$git_sha && docker-compose up -d'
