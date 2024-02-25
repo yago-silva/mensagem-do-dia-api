@@ -98,14 +98,14 @@
     <changeSet  author="20240225144004-1-drop-old-table"  id="dropTable-phrase">
 
 
-<!--        <dropForeignKeyConstraint  baseTableName="rel_phrase__category"-->
-<!--                                   constraintName="fk_rel_phrase__category__phrase_id"/>-->
+        <dropForeignKeyConstraint  baseTableName="rel_phrase__category"
+                                   constraintName="fk_rel_phrase__category__phrase_id"/>
 
-<!--        <dropForeignKeyConstraint  baseTableName="rel_phrase__tag"-->
-<!--                                   constraintName="fk_rel_phrase__tag__phrase_id"/>-->
+        <dropForeignKeyConstraint  baseTableName="rel_phrase__tag"
+                                   constraintName="fk_rel_phrase__tag__phrase_id"/>
 
-<!--        <dropForeignKeyConstraint  baseTableName="media"-->
-<!--                                   constraintName="fk_media__phrase_id"/>-->
+        <dropForeignKeyConstraint  baseTableName="media"
+                                   constraintName="fk_media__phrase_id"/>
 
         <dropTable  cascadeConstraints="true"
                     tableName="phrase"/>
