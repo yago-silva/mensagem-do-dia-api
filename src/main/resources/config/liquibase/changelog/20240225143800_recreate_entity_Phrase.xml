@@ -97,15 +97,15 @@
 
     <changeSet  author="20240225144004-1-drop-old-table"  id="dropTable-phrase">
         <dropTable  cascadeConstraints="true"
-                    schemaName="public"
+                    schemaName="mensagemdodia"
                     tableName="phrase"/>
 
         <dropTable  cascadeConstraints="true"
-                    schemaName="public"
+                    schemaName="mensagemdodia"
                     tableName="rel_phrase__category"/>
 
         <dropTable  cascadeConstraints="true"
-                    schemaName="public"
+                    schemaName="mensagemdodia"
                     tableName="rel_phrase__tag"/>
     </changeSet>
 
