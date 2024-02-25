@@ -33,5 +33,6 @@ jobs:
           aws s3 cp s3://${{ secrets.AWS_BUCKET }}/docker-compose.yml docker-compose.yml
           export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           export GITHUB_SHA=${{ github.sha }}
+          docker pull yagosilvadev/mensagemdodia:${{ github.sha }}
           docker-compose down
           docker-compose up -d
