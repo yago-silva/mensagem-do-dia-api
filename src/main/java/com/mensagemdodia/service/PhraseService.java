@@ -160,7 +160,7 @@ public class PhraseService {
             return Optional.empty();
         }
 
-        Author author = optionalAuthor.get();
+        Author author = optionalAuthor.orElseThrow();
 
         List<Phrase> phrases = phraseRepository.findAllByAuthorSlug(slug);
 

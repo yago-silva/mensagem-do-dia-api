@@ -6,6 +6,8 @@ COPY . .
 
 RUN apk add openjdk17
 
-RUN ./gradlew clean
+RUN npm install
+
+RUN ./gradlew clean build --warning-mode all
 
 CMD ./gradlew -Pprod --warning-mode all
