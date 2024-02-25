@@ -96,16 +96,17 @@
 
 
     <changeSet  author="20240225144004-1-drop-old-table"  id="dropTable-phrase">
+
+        <dropForeignKeyConstraint  baseTableName="media"
+                                   constraintName="fk_media__phrase_id"/>
+
         <dropTable  cascadeConstraints="true"
-                    schemaName="mensagemdodia"
                     tableName="phrase"/>
 
         <dropTable  cascadeConstraints="true"
-                    schemaName="mensagemdodia"
                     tableName="rel_phrase__category"/>
 
         <dropTable  cascadeConstraints="true"
-                    schemaName="mensagemdodia"
                     tableName="rel_phrase__tag"/>
     </changeSet>
 
@@ -113,15 +114,15 @@
     <changeSet  author="20240225144004-1-rename-new-tables"  id="renameTables">
         <renameTable  newTableName="phrase"
                       oldTableName="phrase2"
-                      schemaName="public"/>
+        />
 
         <renameTable  newTableName="rel_phrase__category"
                       oldTableName="rel_phrase2__category"
-                      schemaName="public"/>
+        />
 
         <renameTable  newTableName="rel_phrase__tag"
                       oldTableName="rel_phrase2__tag"
-                      schemaName="public"/>
+        />
     </changeSet>
 
 
@@ -177,6 +178,13 @@
                                  constraintName="fk_rel_phrase__tag__tag_id"
                                  referencedColumnNames="id"
                                  referencedTableName="tag"
+        />
+
+        <addForeignKeyConstraint baseColumnNames="phrase_id"
+                                 baseTableName="media"
+                                 constraintName="fk_media__phrase_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="phrase"
         />
     </changeSet>
 
