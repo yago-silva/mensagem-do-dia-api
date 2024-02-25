@@ -21,15 +21,10 @@ jobs:
           aws_key_id: ${{ secrets.AWS_KEY }}
           aws_secret_access_key: ${{ secrets.AWS_SEC }}
           aws_s3_bucket: ${{ secrets.AWS_BUCKET }}
+          db_password: ${{ secrets.DB_PASSWORD }}
+          git_sha: ${{ github.sha }}
         run: |
-          sudo apt-get update
-          sshpass -p${{ secrets.SSH_PASSWORD }} ssh root@109.199.101.105
-          export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-          export GITHUB_SHA=${{ github.sha }}
-          apt install awscli --silent
-          aws configure set aws_access_key_id $aws_key_id
-          aws configure set aws_secret_access_key $aws_secret_access_key
-          aws configure set default.region us-east-1
-          aws s3 cp s3://$aws_s3_bucket/docker-compose.yml docker-compose.yml
-          docker-compose up -d
-          exit
+          sudo apt-get update && sudo apt-get install sshpass
+          sshpass -p${{ secrets.SSH_PASSWORD }} ssh -t root@109.199.101.105
+          sshpass -p${{ secrets.SSH_PASSWORD }} ssh -t root@109.199.101.105 'apt install awscli --silent && aws configure set aws_access_key_id $aws_key_id && aws configure set aws_secret_access_key $aws_secret_access_key && aws configure set default.region us-east-1 && aws s3 cp s3://$aws_s3_bucket/docker-compose.yml docker-compose.yml'
+          sshpass -p${{ secrets.SSH_PASSWORD }} ssh -t root@109.199.101.105 'export DB_PASSWORD=$db_password && export GITHUB_SHA=$git_sha && docker-compose up -d'
