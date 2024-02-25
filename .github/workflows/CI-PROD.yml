@@ -27,3 +27,11 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: yagosilvadev/mensagemdodia:${{ github.sha }}
+
+      - name: Upload docker-compose yml to s3
+        uses: shallwefootball/s3-upload-action@master
+        with:
+          aws_key_id: ${{ secrets.AWS_KEY }}
+          aws_secret_access_key: ${{ secrets.AWS_SEC}}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: 'docker-compose.yml'
