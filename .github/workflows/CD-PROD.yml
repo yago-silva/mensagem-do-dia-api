@@ -21,8 +21,15 @@ jobs:
           host: 109.199.101.105
           user: root
           pass: ${{ secrets.SSH_PASSWORD }}
+          port: 22
           run: |
-            apt install awscli --silent && aws configure set aws_access_key_id ${{ secrets.AWS_KEY }} && aws configure set aws_secret_access_key ${{ secrets.AWS_SEC }} && aws configure set default.region us-east-1 && aws s3 cp s3://${{ secrets.AWS_BUCKET }}/docker-compose.yml docker-compose.yml
+            echo oi
+
+#            apt install awscli --silent
+#            aws configure set aws_access_key_id ${{ secrets.AWS_KEY }}
+#            aws configure set aws_secret_access_key ${{ secrets.AWS_SEC }}
+#            aws configure set default.region us-east-1
+#            aws s3 cp s3://${{ secrets.AWS_BUCKET }}/docker-compose.yml docker-compose.yml
 
 #      - name: Run docker-compose
 #        shell: bash
