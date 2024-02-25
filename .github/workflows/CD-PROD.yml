@@ -2,6 +2,7 @@ name: CD-PROD
 
 on:
   workflow_run:
+    workflow_dispatch:
     workflows: ['CI-PROD']
     types:
       - completed
@@ -11,27 +12,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          lfs: 'true'
+      - name: Checkout sources
+        uses: actions/checkout@v4
 
-      - name: Generate Deployment Package
-        run: zip -r deploy.zip *
-
-      - name: Config aws
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SEC }}
-          aws-region: us-east-1
-
-      - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v22
-        with:
-          aws_access_key: ${{ secrets.AWS_KEY }}
-          aws_secret_key: ${{ secrets.AWS_SEC }}
-          application_name: api-mensagem-do-dia
-          environment_name: api-mensagem-do-dia-production
-          version_label: 'api-mensagemdodia-prod-${{ github.SHA }}'
-          region: us-east-1
-          deployment_package: deploy.zip
+      - name: Run docker-compose
+        shell: bash
+        env:
+          aws_key_id: ${{ secrets.AWS_KEY }}
+          aws_secret_access_key: ${{ secrets.AWS_SEC }}
+          aws_s3_bucket: ${{ secrets.AWS_BUCKET }}
+        run: |
+          sudo apt-get update && sudo apt-get install sshpass
+          sshpass -p${{ secrets.SSH_PASSWORD }} ssh root@109.199.101.105
+          export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          export GITHUB_SHA=${{ github.sha }}
+          apt install awscli --silent
+          aws configure set aws_access_key_id $aws_key_id
+          aws configure set aws_secret_access_key $aws_secret_access_key
+          aws configure set default.region us-east-1
+          aws s3 cp s3://$aws_s3_bucket/docker-compose.yml docker-compose.yml
+          docker-compose up -d
+          exit
