@@ -144,3 +144,5 @@ Desktop.ini
 /.nyc_output/
 
 .env
+.gradle/8.5/executionHistory/executionHistory.lock
+

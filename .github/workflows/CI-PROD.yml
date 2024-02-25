@@ -2,6 +2,9 @@ name: CI-PROD
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   push_to_registry:
