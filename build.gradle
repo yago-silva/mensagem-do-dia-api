@@ -294,24 +294,26 @@ task webapp_test(type: NpmTask) {
 }
 
 //if (project.hasProperty("nodeInstall")) {
-//    node {
-//        version = "18.18.2"
-//        npmVersion = "10.2.4"
-//        download = true
-//    }
+    node {
+        version = "18.18.2"
+        npmVersion = "10.2.4"
+        download = false
+        workDir = file("/usr/local/bin")
+        npmWorkDir = file("/usr/local/bin")
+    }
 //
-//    // Copy local node and npm to a fixed location for npmw
-//    def fixedNode = tasks.register("fixedNode", Copy) {
-//        from nodeSetup
-//        into 'build/node'
-//    }
-//    tasks.named("nodeSetup").configure { finalizedBy fixedNode }
-//
-//    def fixedNpm = tasks.register("fixedNpm", Copy) {
-//        from npmSetup
-//        into 'build/node'
-//    }
-//    tasks.named("npmSetup").configure { finalizedBy fixedNpm }
+    // Copy local node and npm to a fixed location for npmw
+    def fixedNode = tasks.register("fixedNode", Copy) {
+        from nodeSetup
+        into 'build/node'
+    }
+    tasks.named("nodeSetup").configure { finalizedBy fixedNode }
+
+    def fixedNpm = tasks.register("fixedNpm", Copy) {
+        from npmSetup
+        into 'build/node'
+    }
+    tasks.named("npmSetup").configure { finalizedBy fixedNpm }
 //}
 
 // test.dependsOn webapp_test
