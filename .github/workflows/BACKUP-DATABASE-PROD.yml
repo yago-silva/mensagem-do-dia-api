@@ -24,3 +24,6 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_SEC }}
           aws configure set default.region us-east-1
           aws s3 cp ${BACKUP_FILENAME} s3://${{ secrets.AWS_BUCKET }}/database-backups/
+          rm ${BACKUP_FILENAME}
+          docker image prune
+          docker rm $(docker ps --filter "status=exited" -q)

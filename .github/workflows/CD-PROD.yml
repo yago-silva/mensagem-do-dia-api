@@ -35,6 +35,6 @@ jobs:
         with:
           url: http://api.mensagemdodia.com/api/categories/featured
           follow-redirect: false # Optional, defaults to "false"
-          max-attempts: 1
-          retry-delay: 1s
+          max-attempts: 60
+          retry-delay: 10s
           retry-all: false # Optional, defaults to "false"
