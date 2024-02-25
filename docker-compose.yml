@@ -26,9 +26,7 @@ services:
     image: mysql:8.2.0
     container_name: database
     volumes:
-      - ./config/mysql:/etc/mysql/conf.d
-      #      - ./volumes/jhipster/MensagemDoDia/mysql/:/var/lib/mysql/
-      - ./volumes:/home
+      - ./mysql:/var/lib/mysql/
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
       - MYSQL_DATABASE=mensagemdodia
