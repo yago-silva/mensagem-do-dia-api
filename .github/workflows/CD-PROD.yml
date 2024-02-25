@@ -22,7 +22,7 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_SEC }}
           aws_s3_bucket: ${{ secrets.AWS_BUCKET }}
         run: |
-          sudo apt-get update && sudo apt-get install sshpass
+          sudo apt-get update
           sshpass -p${{ secrets.SSH_PASSWORD }} ssh root@109.199.101.105
           export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           export GITHUB_SHA=${{ github.sha }}
