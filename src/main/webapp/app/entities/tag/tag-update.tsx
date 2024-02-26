@@ -130,6 +130,7 @@ export const TagUpdate = () => {
                   required: { value: true, message: translate('entity.validation.required') },
                 }}
               />
+              <ValidatedField label={'Descrição'} id="tag-description" name="description" data-cy="description" type="textarea" />
               <ValidatedField
                 label={translate('mensagemDoDiaApp.tag.createdAt')}
                 id="tag-createdAt"

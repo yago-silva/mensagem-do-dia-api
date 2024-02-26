@@ -133,6 +133,7 @@ export const CategoryUpdate = () => {
                   required: { value: true, message: translate('entity.validation.required') },
                 }}
               />
+              <ValidatedField label={'Descrição'} id="category-description" name="description" data-cy="description" type="textarea" />
               <ValidatedField
                 label={translate('mensagemDoDiaApp.category.createdAt')}
                 id="category-createdAt"
