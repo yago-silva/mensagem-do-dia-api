@@ -72,6 +72,8 @@ public class Tag implements Serializable {
     @JsonIgnoreProperties(value = { "owner", "media", "categories", "tags", "authors" }, allowSetters = true)
     private Set<Ad> ads = new HashSet<>();
 
+    private String description;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -325,5 +327,13 @@ public class Tag implements Serializable {
             ", active='" + getActive() + "'" +
             ", slug='" + getSlug() + "'" +
             "}";
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -75,6 +75,8 @@ public class Category implements Serializable {
     @JsonIgnoreProperties(value = { "owner", "parents", "media", "phrases", "ads", "tags", "category" }, allowSetters = true)
     private Category category;
 
+    private String description;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -379,6 +381,15 @@ public class Category implements Serializable {
             ", featured='" + getFeatured() + "'" +
             ", active='" + getActive() + "'" +
             ", slug='" + getSlug() + "'" +
+            ", description='" + getDescription() + "'" +
             "}";
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

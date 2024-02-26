@@ -35,6 +35,8 @@ public class AuthorDTO implements Serializable {
 
     private UserDTO owner;
 
+    private String description;
+
     public Long getId() {
         return id;
     }
@@ -141,5 +143,13 @@ public class AuthorDTO implements Serializable {
 
     public void setLastPhraseUpdate(Instant lastPhraseUpdate) {
         this.lastPhraseUpdate = lastPhraseUpdate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

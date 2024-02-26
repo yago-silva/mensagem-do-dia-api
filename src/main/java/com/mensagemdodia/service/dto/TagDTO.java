@@ -39,6 +39,8 @@ public class TagDTO implements Serializable {
 
     private Set<CategoryDTO> categories = new HashSet<>();
 
+    private String description;
+
     public Long getId() {
         return id;
     }
@@ -154,5 +156,13 @@ public class TagDTO implements Serializable {
 
     public void setLastPhraseUpdate(Instant lastPhraseUpdate) {
         this.lastPhraseUpdate = lastPhraseUpdate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
