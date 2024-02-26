@@ -193,7 +193,7 @@ export const PhraseUpdate = () => {
                 {users
                   ? users.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.login}
                       </option>
                     ))
                   : null}
@@ -209,7 +209,7 @@ export const PhraseUpdate = () => {
                 {authors
                   ? authors.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.name}
                       </option>
                     ))
                   : null}
@@ -226,7 +226,7 @@ export const PhraseUpdate = () => {
                 {categories
                   ? categories.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.name}
                       </option>
                     ))
                   : null}
@@ -243,7 +243,7 @@ export const PhraseUpdate = () => {
                 {tags
                   ? tags.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.name}
                       </option>
                     ))
                   : null}
