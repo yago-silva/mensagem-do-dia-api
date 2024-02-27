@@ -124,6 +124,7 @@ export const AuthorUpdate = () => {
                   required: { value: true, message: translate('entity.validation.required') },
                 }}
               />
+              <ValidatedField label={'Descrição'} id="author-description" name="description" data-cy="description" type="textarea" />
               <ValidatedField
                 label={translate('mensagemDoDiaApp.author.createdAt')}
                 id="author-createdAt"

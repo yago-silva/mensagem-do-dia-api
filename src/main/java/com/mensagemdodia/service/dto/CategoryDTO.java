@@ -37,6 +37,8 @@ public class CategoryDTO implements Serializable {
 
     private CategoryDTO category;
 
+    private String description;
+
     public Long getId() {
         return id;
     }
@@ -143,6 +145,7 @@ public class CategoryDTO implements Serializable {
             ", slug='" + getSlug() + "'" +
             ", owner=" + getOwner() +
             ", category=" + getCategory() +
+            ", description=" + getDescription() +
             "}";
     }
 
@@ -152,5 +155,13 @@ public class CategoryDTO implements Serializable {
 
     public void setLastPhraseUpdate(Instant lastPhraseUpdate) {
         this.lastPhraseUpdate = lastPhraseUpdate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

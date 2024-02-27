@@ -61,6 +61,8 @@ public class Author implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
+    private String description;
+
     public Long getId() {
         return this.id;
     }
@@ -235,5 +237,13 @@ public class Author implements Serializable {
 
     public void setPhrases(Set<Phrase> phrases) {
         this.phrases = phrases;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
