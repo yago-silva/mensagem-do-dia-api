@@ -131,27 +131,6 @@ public class PhraseService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<SluggedGroupDTO> getAllByGroupSlug(String slug) {
-        log.debug("Request to get all Phrases by group slug: " + slug);
-
-        Optional<CategoryDTO> optionalCategoryDTO = categoryRepository.findBySlug(slug).map(categoryMapper::toDto);
-
-        Optional<TagDTO> optionalTagDTO = tagRepository.findBySlug(slug).map(tagMapper::toDto);
-
-        if (optionalCategoryDTO.isEmpty() && optionalTagDTO.isEmpty()) {
-            return Optional.empty();
-        }
-
-        LinkedList<PhraseDTO> phrases = phraseRepository
-            .findAllByGroupSlug(slug)
-            .stream()
-            .map(phraseMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
-
-        return Optional.of(new SluggedGroupDTO(optionalCategoryDTO.orElse(null), optionalTagDTO.orElse(null), phrases));
-    }
-
-    @Transactional(readOnly = true)
     public Optional<AuthorPhrasesDTO> getAllByAuthorSlug(String slug) {
         log.debug("Request to get all Phrases by author slug: " + slug);
         Optional<Author> optionalAuthor = authorRepository.findBySlug(slug);

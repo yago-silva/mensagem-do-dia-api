@@ -59,8 +59,7 @@ public class PhraseResource {
             throw new BadRequestAlertException("A new phrase cannot already have an ID", ENTITY_NAME, "idexists");
         }
         PhraseDTO result = phraseService.save(phraseDTO);
-        return ResponseEntity
-            .created(new URI("/api/phrases/" + result.getId()))
+        return ResponseEntity.created(new URI("/api/phrases/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -93,8 +92,7 @@ public class PhraseResource {
         }
 
         PhraseDTO result = phraseService.update(phraseDTO);
-        return ResponseEntity
-            .ok()
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, phraseDTO.getId().toString()))
             .body(result);
     }
@@ -147,12 +145,6 @@ public class PhraseResource {
         return phraseService.findAll();
     }
 
-    @GetMapping("/group/{slug}")
-    public ResponseEntity<SluggedGroupDTO> getAllPhrasesByGroupSlug(@PathVariable("slug") String groupSlug) {
-        log.debug("REST request to get all Phrases by group slug: " + groupSlug);
-        return phraseService.getAllByGroupSlug(groupSlug).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
     @GetMapping("/author/{slug}")
     public ResponseEntity<AuthorPhrasesDTO> getAllPhrasesByAuthorSlug(@PathVariable("slug") String authorSlug) {
         log.debug("REST request to get all Phrases by author slug: " + authorSlug);
@@ -183,8 +175,7 @@ public class PhraseResource {
     public ResponseEntity<Void> deletePhrase(@PathVariable("id") Long id) {
         log.debug("REST request to delete Phrase : {}", id);
         phraseService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }
