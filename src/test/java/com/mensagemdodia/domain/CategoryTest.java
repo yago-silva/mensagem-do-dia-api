@@ -2,7 +2,6 @@ package com.mensagemdodia.domain;
 
 import static com.mensagemdodia.domain.AdTestSamples.*;
 import static com.mensagemdodia.domain.CategoryTestSamples.*;
-import static com.mensagemdodia.domain.CategoryTestSamples.*;
 import static com.mensagemdodia.domain.MediaTestSamples.*;
 import static com.mensagemdodia.domain.PhraseTestSamples.*;
 import static com.mensagemdodia.domain.TagTestSamples.*;
@@ -35,19 +34,19 @@ class CategoryTest {
         Category categoryBack = getCategoryRandomSampleGenerator();
 
         category.addParent(categoryBack);
-        assertThat(category.getParents()).containsOnly(categoryBack);
+        assertThat(category.getChildCategories()).containsOnly(categoryBack);
         assertThat(categoryBack.getCategory()).isEqualTo(category);
 
         category.removeParent(categoryBack);
-        assertThat(category.getParents()).doesNotContain(categoryBack);
+        assertThat(category.getChildCategories()).doesNotContain(categoryBack);
         assertThat(categoryBack.getCategory()).isNull();
 
         category.parents(new HashSet<>(Set.of(categoryBack)));
-        assertThat(category.getParents()).containsOnly(categoryBack);
+        assertThat(category.getChildCategories()).containsOnly(categoryBack);
         assertThat(categoryBack.getCategory()).isEqualTo(category);
 
-        category.setParents(new HashSet<>());
-        assertThat(category.getParents()).doesNotContain(categoryBack);
+        category.setChildCategories(new HashSet<>());
+        assertThat(category.getChildCategories()).doesNotContain(categoryBack);
         assertThat(categoryBack.getCategory()).isNull();
     }
 

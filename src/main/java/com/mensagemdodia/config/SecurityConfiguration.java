@@ -54,23 +54,29 @@ public class SecurityConfiguration {
             .cors(cors -> cors.configurationSource(myWebsiteConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .addFilterAfter(new SpaWebFilter(), BasicAuthenticationFilter.class)
-            .headers(headers ->
-                headers
-                    .contentSecurityPolicy(csp -> csp.policyDirectives(jHipsterProperties.getSecurity().getContentSecurityPolicy()))
-                    .frameOptions(FrameOptionsConfig::sameOrigin)
-                    .referrerPolicy(referrer -> referrer.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
-                    .permissionsPolicy(permissions ->
-                        permissions.policy(
-                            "camera=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), sync-xhr=()"
+            .headers(
+                headers ->
+                    headers
+                        .contentSecurityPolicy(csp -> csp.policyDirectives(jHipsterProperties.getSecurity().getContentSecurityPolicy()))
+                        .frameOptions(FrameOptionsConfig::sameOrigin)
+                        .referrerPolicy(
+                            referrer -> referrer.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)
                         )
-                    )
+                        .permissionsPolicy(
+                            permissions ->
+                                permissions.policy(
+                                    "camera=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), sync-xhr=()"
+                                )
+                        )
             )
-            .authorizeHttpRequests(authz ->
-                // prettier-ignore
+            .authorizeHttpRequests(
+                authz ->
+                    // prettier-ignore
                 authz
                     .requestMatchers(mvc.pattern("/index.html"), mvc.pattern("/*.js"), mvc.pattern("/*.txt"), mvc.pattern("/*.json"), mvc.pattern("/*.map"), mvc.pattern("/*.css")).permitAll()
                     .requestMatchers(mvc.pattern("/*.ico"), mvc.pattern("/*.png"), mvc.pattern("/*.svg"), mvc.pattern("/*.webapp")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/phrases/group/**")).permitAll()
+                    .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/phrase-groupings/**")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/phrases/author/**")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/categories")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/categories/featured")).permitAll()
@@ -99,10 +105,11 @@ public class SecurityConfiguration {
                     .requestMatchers(mvc.pattern("/management/**")).hasAuthority(AuthoritiesConstants.ADMIN)
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .exceptionHandling(exceptions ->
-                exceptions
-                    .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
-                    .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
+            .exceptionHandling(
+                exceptions ->
+                    exceptions
+                        .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
+                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
             )
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         if (env.acceptsProfiles(Profiles.of(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT))) {

@@ -53,7 +53,7 @@ public class Category implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     @JsonIgnoreProperties(value = { "owner", "parents", "media", "phrases", "ads", "tags", "category" }, allowSetters = true)
-    private Set<Category> parents = new HashSet<>();
+    private Set<Category> childCategories = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     @JsonIgnoreProperties(value = { "owner", "phrase", "ad", "category", "tag" }, allowSetters = true)
@@ -183,33 +183,33 @@ public class Category implements Serializable {
         return this;
     }
 
-    public Set<Category> getParents() {
-        return this.parents;
+    public Set<Category> getChildCategories() {
+        return this.childCategories;
     }
 
-    public void setParents(Set<Category> categories) {
-        if (this.parents != null) {
-            this.parents.forEach(i -> i.setCategory(null));
+    public void setChildCategories(Set<Category> categories) {
+        if (this.childCategories != null) {
+            this.childCategories.forEach(i -> i.setCategory(null));
         }
         if (categories != null) {
             categories.forEach(i -> i.setCategory(this));
         }
-        this.parents = categories;
+        this.childCategories = categories;
     }
 
     public Category parents(Set<Category> categories) {
-        this.setParents(categories);
+        this.setChildCategories(categories);
         return this;
     }
 
     public Category addParent(Category category) {
-        this.parents.add(category);
+        this.childCategories.add(category);
         category.setCategory(this);
         return this;
     }
 
     public Category removeParent(Category category) {
-        this.parents.remove(category);
+        this.childCategories.remove(category);
         category.setCategory(null);
         return this;
     }

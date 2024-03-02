@@ -1,5 +1,6 @@
 package com.mensagemdodia.repository;
 
+import com.mensagemdodia.domain.Category;
 import com.mensagemdodia.domain.Tag;
 import java.util.List;
 import java.util.Optional;
