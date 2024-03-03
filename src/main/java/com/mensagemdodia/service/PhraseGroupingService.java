@@ -14,6 +14,7 @@ import com.mensagemdodia.service.mapper.PhraseMapper;
 import com.mensagemdodia.service.mapper.TagMapper;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -79,7 +80,8 @@ public class PhraseGroupingService {
             groupingSlug,
             optionalCategory.map(categoryMapper::toDto),
             optionalTag.map(tagMapper::toDto),
-            true
+            true,
+            null
         );
 
         var alreadyUsedPhrases = new HashSet<Long>();
@@ -96,7 +98,8 @@ public class PhraseGroupingService {
                     childCategory.getSlug(),
                     Optional.of(childCategory).map(categoryMapper::toDto),
                     Optional.empty(),
-                    true
+                    true,
+                    5
                 );
 
                 childCategoryPhraseGroup.setPhrases(
@@ -116,7 +119,8 @@ public class PhraseGroupingService {
                         parentCategory.getSlug(),
                         Optional.of(parentCategory).map(categoryMapper::toDto),
                         Optional.empty(),
-                        false
+                        false,
+                        0
                     )
                 );
 
@@ -128,7 +132,7 @@ public class PhraseGroupingService {
                 .getAllRelatedWithCategories(category.getId())
                 .stream()
                 .map(tagMapper::toDto)
-                .map(tagDto -> buildPhraseGrouping(tagDto.getSlug(), Optional.empty(), Optional.of(tagDto), false))
+                .map(tagDto -> buildPhraseGrouping(tagDto.getSlug(), Optional.empty(), Optional.of(tagDto), false, 0))
                 .forEach(relatedGroupings::add);
         } else if (optionalTag.isPresent()) {
             Tag tag = optionalTag.get();
@@ -137,7 +141,7 @@ public class PhraseGroupingService {
                 .getCategories()
                 .stream()
                 .map(categoryMapper::toDto)
-                .map(categoryDto -> buildPhraseGrouping(categoryDto.getSlug(), Optional.of(categoryDto), Optional.empty(), false))
+                .map(categoryDto -> buildPhraseGrouping(categoryDto.getSlug(), Optional.of(categoryDto), Optional.empty(), false, 0))
                 .forEach(relatedGroupings::add);
         }
 
@@ -154,16 +158,19 @@ public class PhraseGroupingService {
         String groupingSlug,
         Optional<CategoryDTO> optionalCategoryDTO,
         Optional<TagDTO> optionalTagDTO,
-        boolean includePhrases
+        boolean includePhrases,
+        Integer limit
     ) {
         LinkedList<PhraseDTO> phrases = new LinkedList<>();
 
         if (includePhrases) {
-            phrases = phraseRepository
-                .findAllByGroupSlug(groupingSlug)
-                .stream()
-                .map(phraseMapper::toDto)
-                .collect(Collectors.toCollection(LinkedList::new));
+            Stream<PhraseDTO> phraseDTOStream = phraseRepository.findAllByGroupSlug(groupingSlug).stream().map(phraseMapper::toDto);
+
+            if (limit != null) {
+                phraseDTOStream = phraseDTOStream.limit(limit);
+            }
+
+            phrases = phraseDTOStream.collect(Collectors.toCollection(LinkedList::new));
         }
         var groupingName = optionalCategoryDTO
             .map(categoryDTO -> categoryDTO.getName())
