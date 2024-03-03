@@ -18,4 +18,7 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
 
     @Query("SELECT a FROM Author a WHERE a.featured = true AND a.active = true ORDER BY a.updatedAt DESC")
     public List<Author> getAllFeatured();
+
+    @Query("SELECT a FROM Author a WHERE a.active = true ORDER BY a.updatedAt DESC")
+    public List<Author> getAllActive();
 }

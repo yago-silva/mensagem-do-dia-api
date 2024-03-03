@@ -78,21 +78,25 @@ public class PhraseGroupingService {
         final PhraseGroupingDTO phraseGroupingDTO = buildPhraseGrouping(
             groupingSlug,
             optionalCategory.map(categoryMapper::toDto),
-            optionalTag.map(tagMapper::toDto)
+            optionalTag.map(tagMapper::toDto),
+            true
         );
 
         var alreadyUsedPhrases = new HashSet<Long>();
 
+        var relatedGroupings = new ArrayList<PhraseGroupingDTO>();
+
         if (optionalCategory.isPresent() && includeChildGroupings) {
-            Category parentCategory = optionalCategory.get();
-            List<Category> childCategories = categoryRepository.findChildCategoryByParentCategoryId(parentCategory.getId());
+            Category category = optionalCategory.get();
+            List<Category> childCategories = categoryRepository.findChildCategoryByParentCategoryId(category.getId());
 
             //Child Categories
             childCategories.forEach(childCategory -> {
                 var childCategoryPhraseGroup = buildPhraseGrouping(
                     childCategory.getSlug(),
                     Optional.of(childCategory).map(categoryMapper::toDto),
-                    Optional.empty()
+                    Optional.empty(),
+                    true
                 );
 
                 childCategoryPhraseGroup.setPhrases(
@@ -103,11 +107,45 @@ public class PhraseGroupingService {
 
                 alreadyUsedPhrases.addAll(childCategory.getPhrases().stream().map(Phrase::getId).collect(Collectors.toSet()));
             });
+
+            //Add the related parent category
+            if (category.getCategory() != null) {
+                Category parentCategory = category.getCategory();
+                relatedGroupings.add(
+                    buildPhraseGrouping(
+                        parentCategory.getSlug(),
+                        Optional.of(parentCategory).map(categoryMapper::toDto),
+                        Optional.empty(),
+                        false
+                    )
+                );
+
+                phraseGroupingDTO.setParentCategory(Optional.of(parentCategory).map(categoryMapper::toDto).get());
+            }
+
+            //Add category related tags
+            tagRepository
+                .getAllRelatedWithCategories(category.getId())
+                .stream()
+                .map(tagMapper::toDto)
+                .map(tagDto -> buildPhraseGrouping(tagDto.getSlug(), Optional.empty(), Optional.of(tagDto), false))
+                .forEach(relatedGroupings::add);
+        } else if (optionalTag.isPresent()) {
+            Tag tag = optionalTag.get();
+            //Add tag related categories
+            tag
+                .getCategories()
+                .stream()
+                .map(categoryMapper::toDto)
+                .map(categoryDto -> buildPhraseGrouping(categoryDto.getSlug(), Optional.of(categoryDto), Optional.empty(), false))
+                .forEach(relatedGroupings::add);
         }
 
         phraseGroupingDTO.setPhrases(
             phraseGroupingDTO.getPhrases().stream().filter(phrase -> !alreadyUsedPhrases.contains(phrase.getId())).toList()
         );
+
+        phraseGroupingDTO.setRelateds(relatedGroupings);
 
         return Optional.of(phraseGroupingDTO);
     }
@@ -115,14 +153,18 @@ public class PhraseGroupingService {
     private PhraseGroupingDTO buildPhraseGrouping(
         String groupingSlug,
         Optional<CategoryDTO> optionalCategoryDTO,
-        Optional<TagDTO> optionalTagDTO
+        Optional<TagDTO> optionalTagDTO,
+        boolean includePhrases
     ) {
-        LinkedList<PhraseDTO> phrases = phraseRepository
-            .findAllByGroupSlug(groupingSlug)
-            .stream()
-            .map(phraseMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
+        LinkedList<PhraseDTO> phrases = new LinkedList<>();
 
+        if (includePhrases) {
+            phrases = phraseRepository
+                .findAllByGroupSlug(groupingSlug)
+                .stream()
+                .map(phraseMapper::toDto)
+                .collect(Collectors.toCollection(LinkedList::new));
+        }
         var groupingName = optionalCategoryDTO
             .map(categoryDTO -> categoryDTO.getName())
             .orElseGet(() -> optionalTagDTO.map(tagDTO -> tagDTO.getName()).orElseThrow());
@@ -133,6 +175,6 @@ public class PhraseGroupingService {
 
         var childGroupings = new ArrayList<PhraseGroupingDTO>();
 
-        return new PhraseGroupingDTO(groupingSlug, groupingName, groupingDescription, phrases, childGroupings);
+        return new PhraseGroupingDTO(groupingSlug, groupingName, groupingDescription, phrases, childGroupings, new ArrayList<>(), null);
     }
 }

@@ -57,8 +57,7 @@ public class AuthorResource {
             throw new BadRequestAlertException("A new author cannot already have an ID", ENTITY_NAME, "idexists");
         }
         AuthorDTO result = authorService.save(authorDTO);
-        return ResponseEntity
-            .created(new URI("/api/authors/" + result.getId()))
+        return ResponseEntity.created(new URI("/api/authors/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -91,8 +90,7 @@ public class AuthorResource {
         }
 
         AuthorDTO result = authorService.update(authorDTO);
-        return ResponseEntity
-            .ok()
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, authorDTO.getId().toString()))
             .body(result);
     }
@@ -172,8 +170,7 @@ public class AuthorResource {
     public ResponseEntity<Void> deleteAuthor(@PathVariable("id") Long id) {
         log.debug("REST request to delete Author : {}", id);
         authorService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }
@@ -182,5 +179,11 @@ public class AuthorResource {
     public List<AuthorDTO> getFeaturedAuthors() {
         log.debug("REST request to get all featured Categories");
         return authorService.findAllFeatured();
+    }
+
+    @GetMapping("active")
+    public List<AuthorDTO> getAllActiveAuthors() {
+        log.debug("REST request to get all active Authors");
+        return authorService.findAllActive();
     }
 }

@@ -34,4 +34,7 @@ public interface TagRepository extends TagRepositoryWithBagRelationships, JpaRep
 
     @Query("SELECT t FROM Tag t WHERE t.featured = true AND t.active = true ORDER BY t.updatedAt DESC")
     public List<Tag> getAllFeatured();
+
+    @Query("SELECT t FROM Tag t JOIN t.categories c WHERE t.active = true AND c.id = :categoryId ORDER BY t.updatedAt DESC")
+    public List<Tag> getAllRelatedWithCategories(Long categoryId);
 }

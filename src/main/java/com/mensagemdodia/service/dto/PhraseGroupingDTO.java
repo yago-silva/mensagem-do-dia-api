@@ -9,14 +9,28 @@ public class PhraseGroupingDTO {
     private String name;
     private String description;
     private List<PhraseDTO> phrases;
-    private List<PhraseGroupingDTO> childGrouping;
+    private List<PhraseGroupingDTO> childGroupings;
 
-    public PhraseGroupingDTO(String slug, String name, String description, List<PhraseDTO> phrases, List<PhraseGroupingDTO> childGrouping) {
+    private List<PhraseGroupingDTO> relateds;
+
+    private CategoryDTO parentCategory;
+
+    public PhraseGroupingDTO(
+        String slug,
+        String name,
+        String description,
+        List<PhraseDTO> phrases,
+        List<PhraseGroupingDTO> childGroupings,
+        List<PhraseGroupingDTO> relateds,
+        CategoryDTO parentCategory
+    ) {
         this.slug = slug;
         this.name = name;
         this.description = description;
         this.phrases = phrases;
-        this.childGrouping = childGrouping;
+        this.childGroupings = childGroupings;
+        this.relateds = relateds;
+        this.parentCategory = parentCategory;
     }
 
     public String getSlug() {
@@ -39,14 +53,30 @@ public class PhraseGroupingDTO {
         this.phrases = phrases;
     }
 
-    public List<PhraseGroupingDTO> getChildGrouping() {
-        return childGrouping;
+    public List<PhraseGroupingDTO> getChildGroupings() {
+        return childGroupings;
     }
 
     public void addChildGrouping(PhraseGroupingDTO groupingDTO) {
-        if (this.childGrouping == null) {
-            this.childGrouping = new ArrayList<>();
+        if (this.childGroupings == null) {
+            this.childGroupings = new ArrayList<>();
         }
-        this.childGrouping.add(groupingDTO);
+        this.childGroupings.add(groupingDTO);
+    }
+
+    public List<PhraseGroupingDTO> getRelateds() {
+        return relateds;
+    }
+
+    public void setRelateds(List<PhraseGroupingDTO> relateds) {
+        this.relateds = relateds;
+    }
+
+    public CategoryDTO getParentCategory() {
+        return parentCategory;
+    }
+
+    public void setParentCategory(CategoryDTO parentCategory) {
+        this.parentCategory = parentCategory;
     }
 }

@@ -95,6 +95,12 @@ public class AuthorService {
         return authorRepository.findAll().stream().map(authorMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
+    @Transactional(readOnly = true)
+    public List<AuthorDTO> findAllActive() {
+        log.debug("Request to get all active Authors");
+        return authorRepository.getAllActive().stream().map(authorMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
+    }
+
     /**
      *  Get all the authors where Phrase is {@code null}.
      *  @return the list of entities.

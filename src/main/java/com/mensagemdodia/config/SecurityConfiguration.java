@@ -82,6 +82,7 @@ public class SecurityConfiguration {
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/categories/featured")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/authors")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/authors/featured")).permitAll()
+                    .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/authors/active")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/tags")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/tags/featured")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/phrases/featured")).permitAll()
