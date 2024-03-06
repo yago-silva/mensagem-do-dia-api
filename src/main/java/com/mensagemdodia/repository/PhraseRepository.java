@@ -37,27 +37,27 @@ public interface PhraseRepository extends PhraseRepositoryWithBagRelationships, 
         "LEFT JOIN p.tags t " +
         "WHERE " +
         "( " +
-        "(c.slug = :slug AND c.active = true) " +
+        "(c.slug = :slug AND (c.active = true OR :includeInactives = true) ) " +
         "OR " +
-        "(t.slug = :slug AND t.active = true) " +
+        "(t.slug = :slug AND (t.active = true OR :includeInactives = true) ) " +
         ") " +
         "AND " +
-        "p.active = true " +
+        "(p.active = true OR :includeInactives = true)" +
         "ORDER BY p.updatedAt DESC"
     )
-    public List<Phrase> findAllByGroupSlug(@Param("slug") String slug);
+    public List<Phrase> findAllByGroupSlug(@Param("slug") String slug, @Param("includeInactives") boolean includeInactives);
 
     @Query(
         "SELECT " +
         "p FROM Phrase p " +
         "LEFT JOIN p.author a " +
         "WHERE " +
-        "(a.slug = :slug AND a.active = true) " +
+        "(a.slug = :slug AND (a.active = true OR :includeInactives = true)) " +
         "AND " +
-        "p.active = true " +
+        "(p.active = true OR :includeInactives = true) " +
         "ORDER BY p.updatedAt DESC"
     )
-    public List<Phrase> findAllByAuthorSlug(@Param("slug") String slug);
+    public List<Phrase> findAllByAuthorSlug(@Param("slug") String slug, @Param("includeInactives") boolean includeInactives);
 
     @Query("SELECT p FROM Phrase p WHERE p.featured = true AND p.active = true ORDER BY p.updatedAt DESC")
     public List<Phrase> getAllFeatured();

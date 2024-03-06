@@ -146,10 +146,16 @@ public class PhraseResource {
     }
 
     @GetMapping("/author/{slug}")
-    public ResponseEntity<AuthorPhrasesDTO> getAllPhrasesByAuthorSlug(@PathVariable("slug") String authorSlug) {
+    public ResponseEntity<AuthorPhrasesDTO> getAllPhrasesByAuthorSlug(
+        @PathVariable("slug") String authorSlug,
+        @RequestParam(value = "includeInactives", defaultValue = "false") boolean includeInactives
+    ) {
         log.debug("REST request to get all Phrases by author slug: " + authorSlug);
 
-        return phraseService.getAllByAuthorSlug(authorSlug).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return phraseService
+            .getAllByAuthorSlug(authorSlug, includeInactives)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
     }
 
     /**

@@ -66,11 +66,15 @@ public class PhraseGroupingService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<PhraseGroupingDTO> getPhrasesGroupingSlug(String groupingSlug, boolean includeChildGroupings) {
+    public Optional<PhraseGroupingDTO> getPhrasesGroupingSlug(
+        String groupingSlug,
+        boolean includeChildGroupings,
+        boolean includeInactives
+    ) {
         log.debug("Request to get Phrases of grouping: " + groupingSlug);
 
-        Optional<Category> optionalCategory = categoryRepository.findBySlug(groupingSlug);
-        Optional<Tag> optionalTag = tagRepository.findBySlug(groupingSlug);
+        Optional<Category> optionalCategory = categoryRepository.findBySlug(groupingSlug, includeInactives);
+        Optional<Tag> optionalTag = tagRepository.findBySlug(groupingSlug, includeInactives);
 
         if (optionalCategory.isEmpty() && optionalTag.isEmpty()) {
             return Optional.empty();
@@ -81,7 +85,8 @@ public class PhraseGroupingService {
             optionalCategory.map(categoryMapper::toDto),
             optionalTag.map(tagMapper::toDto),
             true,
-            null
+            null,
+            includeInactives
         );
 
         var alreadyUsedPhrases = new HashSet<Long>();
@@ -90,7 +95,7 @@ public class PhraseGroupingService {
 
         if (optionalCategory.isPresent() && includeChildGroupings) {
             Category category = optionalCategory.get();
-            List<Category> childCategories = categoryRepository.findChildCategoryByParentCategoryId(category.getId());
+            List<Category> childCategories = categoryRepository.findChildCategoryByParentCategoryId(category.getId(), includeInactives);
 
             //Child Categories
             childCategories.forEach(childCategory -> {
@@ -99,7 +104,8 @@ public class PhraseGroupingService {
                     Optional.of(childCategory).map(categoryMapper::toDto),
                     Optional.empty(),
                     true,
-                    5
+                    5,
+                    includeInactives
                 );
 
                 childCategoryPhraseGroup.setPhrases(
@@ -120,19 +126,19 @@ public class PhraseGroupingService {
                         Optional.of(parentCategory).map(categoryMapper::toDto),
                         Optional.empty(),
                         false,
-                        0
+                        0,
+                        includeInactives
                     )
                 );
-
                 phraseGroupingDTO.setParentCategory(Optional.of(parentCategory).map(categoryMapper::toDto).get());
             }
 
             //Add category related tags
             tagRepository
-                .getAllRelatedWithCategories(category.getId())
+                .getAllRelatedWithCategories(category.getId(), includeInactives)
                 .stream()
                 .map(tagMapper::toDto)
-                .map(tagDto -> buildPhraseGrouping(tagDto.getSlug(), Optional.empty(), Optional.of(tagDto), false, 0))
+                .map(tagDto -> buildPhraseGrouping(tagDto.getSlug(), Optional.empty(), Optional.of(tagDto), false, 0, includeInactives))
                 .forEach(relatedGroupings::add);
         } else if (optionalTag.isPresent()) {
             Tag tag = optionalTag.get();
@@ -141,7 +147,10 @@ public class PhraseGroupingService {
                 .getCategories()
                 .stream()
                 .map(categoryMapper::toDto)
-                .map(categoryDto -> buildPhraseGrouping(categoryDto.getSlug(), Optional.of(categoryDto), Optional.empty(), false, 0))
+                .map(
+                    categoryDto ->
+                        buildPhraseGrouping(categoryDto.getSlug(), Optional.of(categoryDto), Optional.empty(), false, 0, includeInactives)
+                )
                 .forEach(relatedGroupings::add);
         }
 
@@ -159,12 +168,16 @@ public class PhraseGroupingService {
         Optional<CategoryDTO> optionalCategoryDTO,
         Optional<TagDTO> optionalTagDTO,
         boolean includePhrases,
-        Integer limit
+        Integer limit,
+        boolean includeInactives
     ) {
         LinkedList<PhraseDTO> phrases = new LinkedList<>();
 
         if (includePhrases) {
-            Stream<PhraseDTO> phraseDTOStream = phraseRepository.findAllByGroupSlug(groupingSlug).stream().map(phraseMapper::toDto);
+            Stream<PhraseDTO> phraseDTOStream = phraseRepository
+                .findAllByGroupSlug(groupingSlug, includeInactives)
+                .stream()
+                .map(phraseMapper::toDto);
 
             if (limit != null) {
                 phraseDTOStream = phraseDTOStream.limit(limit);

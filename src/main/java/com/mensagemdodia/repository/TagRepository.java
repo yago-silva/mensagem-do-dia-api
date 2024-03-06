@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -29,12 +30,14 @@ public interface TagRepository extends TagRepositoryWithBagRelationships, JpaRep
         return this.fetchBagRelationships(this.findAll(pageable));
     }
 
-    @Query("SELECT t FROM Tag t WHERE t.active = true AND t.slug = :slug ORDER BY t.updatedAt DESC")
-    Optional<Tag> findBySlug(String slug);
+    @Query("SELECT t FROM Tag t WHERE (t.active = true OR :includeInactives = true) AND t.slug = :slug ORDER BY t.updatedAt DESC")
+    Optional<Tag> findBySlug(String slug, @Param("includeInactives") boolean includeInactives);
 
     @Query("SELECT t FROM Tag t WHERE t.featured = true AND t.active = true ORDER BY t.updatedAt DESC")
     public List<Tag> getAllFeatured();
 
-    @Query("SELECT t FROM Tag t JOIN t.categories c WHERE t.active = true AND c.id = :categoryId ORDER BY t.updatedAt DESC")
-    public List<Tag> getAllRelatedWithCategories(Long categoryId);
+    @Query(
+        "SELECT t FROM Tag t JOIN t.categories c WHERE (t.active = true OR :includeInactives = true) AND c.id = :categoryId ORDER BY t.updatedAt DESC"
+    )
+    public List<Tag> getAllRelatedWithCategories(Long categoryId, @Param("includeInactives") boolean includeInactives);
 }

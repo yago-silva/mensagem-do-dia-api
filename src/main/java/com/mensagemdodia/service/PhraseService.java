@@ -131,9 +131,9 @@ public class PhraseService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<AuthorPhrasesDTO> getAllByAuthorSlug(String slug) {
+    public Optional<AuthorPhrasesDTO> getAllByAuthorSlug(String slug, boolean includeInactives) {
         log.debug("Request to get all Phrases by author slug: " + slug);
-        Optional<Author> optionalAuthor = authorRepository.findBySlug(slug);
+        Optional<Author> optionalAuthor = authorRepository.findBySlug(slug, includeInactives);
 
         if (!optionalAuthor.isPresent()) {
             return Optional.empty();
@@ -141,7 +141,7 @@ public class PhraseService {
 
         Author author = optionalAuthor.orElseThrow();
 
-        List<Phrase> phrases = phraseRepository.findAllByAuthorSlug(slug);
+        List<Phrase> phrases = phraseRepository.findAllByAuthorSlug(slug, includeInactives);
 
         return Optional.of(new AuthorPhrasesDTO(authorMapper.toDto(author), phrases.stream().map(phraseMapper::toDto).toList()));
     }
