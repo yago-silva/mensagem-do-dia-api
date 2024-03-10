@@ -41,6 +41,8 @@ public class PhraseDTO implements Serializable {
 
     private Set<TagDTO> tags = new HashSet<>();
 
+    private Set<PhraseMediaDTO> media = new HashSet<>();
+
     public Long getId() {
         return id;
     }
@@ -165,6 +167,15 @@ public class PhraseDTO implements Serializable {
             ", author=" + getAuthor() +
             ", categories=" + getCategories() +
             ", tags=" + getTags() +
+            ", media=" + getMedia() +
             "}";
+    }
+
+    public Set<PhraseMediaDTO> getMedia() {
+        return media;
+    }
+
+    public void setMedia(Set<PhraseMediaDTO> media) {
+        this.media = media;
     }
 }

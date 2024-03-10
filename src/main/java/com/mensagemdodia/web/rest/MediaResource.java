@@ -6,14 +6,20 @@ import com.mensagemdodia.service.dto.MediaDTO;
 import com.mensagemdodia.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import javax.imageio.ImageIO;
+import org.apache.commons.compress.utils.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
@@ -56,8 +62,7 @@ public class MediaResource {
             throw new BadRequestAlertException("A new media cannot already have an ID", ENTITY_NAME, "idexists");
         }
         MediaDTO result = mediaService.save(mediaDTO);
-        return ResponseEntity
-            .created(new URI("/api/media/" + result.getId()))
+        return ResponseEntity.created(new URI("/api/media/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -90,8 +95,7 @@ public class MediaResource {
         }
 
         MediaDTO result = mediaService.update(mediaDTO);
-        return ResponseEntity
-            .ok()
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, mediaDTO.getId().toString()))
             .body(result);
     }
@@ -166,9 +170,59 @@ public class MediaResource {
     public ResponseEntity<Void> deleteMedia(@PathVariable("id") Long id) {
         log.debug("REST request to delete Media : {}", id);
         mediaService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @GetMapping(value = "phrase", produces = MediaType.IMAGE_JPEG_VALUE)
+    public @ResponseBody byte[] createNewImageForPhrase() throws IOException {
+        var phrase = "Em frente ou enfrente. Você me entende?";
+        //        var phrase = "Se soubessem o quanto a vida é passageira correriam menos e entenderiam o porque o \"agora\" se chama \"presente\"";
+
+        List<String> phraseLines = new ArrayList<>();
+
+        String nextLine = "";
+
+        String[] split = phrase.split(" ");
+        for (var index = 0; index < split.length; index++) {
+            nextLine += " " + split[index];
+
+            if (nextLine.length() >= 15) {
+                phraseLines.add(nextLine.trim());
+                nextLine = "";
+            }
+        }
+
+        phraseLines.add(nextLine.trim());
+
+        BufferedImage image = ImageIO.read(
+            new URL("https://mensagemdodia.s3.sa-east-1.amazonaws.com/testes-com-imagens/frases_de_amor.jpg")
+        );
+
+        Font font = new Font(Font.SANS_SERIF, Font.BOLD, 42);
+
+        Graphics g = image.getGraphics();
+        g.setFont(font);
+        g.setColor(Color.decode("#000000"));
+
+        FontMetrics metrics = g.getFontMetrics(font);
+
+        var lineSpacing = metrics.getHeight() + (metrics.getHeight() / 2);
+
+        int positionY = (image.getHeight() - (lineSpacing * phraseLines.size())) / 2 + metrics.getAscent();
+        for (int index = 0; index < phraseLines.size(); index++) {
+            int positionX = (image.getWidth() - metrics.stringWidth(phraseLines.get(index).toUpperCase())) / 2;
+            g.drawString(phraseLines.get(index).toUpperCase(), positionX, positionY);
+            positionY += lineSpacing;
+        }
+
+        g.create();
+
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        ImageIO.write(image, "jpg", outStream);
+        InputStream is = new ByteArrayInputStream(outStream.toByteArray());
+
+        return IOUtils.toByteArray(is);
     }
 }
