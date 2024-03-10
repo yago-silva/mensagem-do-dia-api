@@ -1,14 +1,21 @@
 package com.mensagemdodia.service;
 
+import com.mensagemdodia.domain.ImageMediaEditor;
 import com.mensagemdodia.domain.Media;
+import com.mensagemdodia.domain.Phrase;
 import com.mensagemdodia.repository.MediaRepository;
+import com.mensagemdodia.repository.PhraseRepository;
 import com.mensagemdodia.service.dto.MediaDTO;
 import com.mensagemdodia.service.mapper.MediaMapper;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,9 +34,12 @@ public class MediaService {
 
     private final MediaMapper mediaMapper;
 
-    public MediaService(MediaRepository mediaRepository, MediaMapper mediaMapper) {
+    private final PhraseRepository phraseRepository;
+
+    public MediaService(MediaRepository mediaRepository, MediaMapper mediaMapper, PhraseRepository phraseRepository) {
         this.mediaRepository = mediaRepository;
         this.mediaMapper = mediaMapper;
+        this.phraseRepository = phraseRepository;
     }
 
     /**
@@ -113,5 +123,18 @@ public class MediaService {
     public void delete(Long id) {
         log.debug("Request to delete Media : {}", id);
         mediaRepository.deleteById(id);
+    }
+
+    public byte[] createNewImageForPhrase(Long phraseId) throws IOException {
+        Phrase phrase = phraseRepository.findById(phraseId).orElseThrow();
+
+        // var phrase = "Em frente ou enfrente. Você me entende?";
+        //        var phrase = "Se soubessem o quanto a vida é passageira correriam menos e entenderiam o porque o \"agora\" se chama \"presente\"";
+
+        BufferedImage image = ImageIO.read(
+            new URL("https://mensagemdodia.s3.sa-east-1.amazonaws.com/testes-com-imagens/frases_de_amor.jpg")
+        );
+
+        return ImageMediaEditor.addPhraseToImage(image, phrase);
     }
 }
