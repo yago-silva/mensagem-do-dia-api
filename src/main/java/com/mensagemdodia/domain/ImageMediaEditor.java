@@ -19,6 +19,7 @@ public class ImageMediaEditor {
         image = addBlur(image);
         addOpaqueBackgrounds(image);
         addPhraseContent(image, phrase);
+        addSiteRef(image);
 
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         ImageIO.write(image, "jpg", outStream);
@@ -107,5 +108,21 @@ public class ImageMediaEditor {
             authorTextGraphics.drawString(authorName, positionX, positionY);
             authorTextGraphics.create();
         }
+    }
+
+    private static void addSiteRef(BufferedImage image) {
+        Graphics textGraphics = image.getGraphics();
+        Font textFont = new Font(Font.SANS_SERIF, Font.PLAIN, 32);
+        textGraphics.setFont(textFont);
+        textGraphics.setColor(Color.decode("#FFFFFF"));
+
+        String siteDomain = "www.mensagemdodia.com";
+
+        FontMetrics metrics = textGraphics.getFontMetrics(textFont);
+        var lineSpacing = metrics.getHeight() + (metrics.getHeight() / 2);
+        int positionX = (image.getWidth() - metrics.stringWidth(siteDomain)) / 2;
+        int positionY = (image.getHeight() - lineSpacing);
+        textGraphics.drawString(siteDomain, positionX, positionY);
+        textGraphics.create();
     }
 }

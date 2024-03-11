@@ -14,6 +14,7 @@ import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import org.slf4j.Logger;
@@ -128,8 +129,9 @@ public class MediaService {
     public byte[] createNewImageForPhrase(Long phraseId) throws IOException {
         Phrase phrase = phraseRepository.findById(phraseId).orElseThrow();
 
-        // var phrase = "Em frente ou enfrente. Você me entende?";
-        //        var phrase = "Se soubessem o quanto a vida é passageira correriam menos e entenderiam o porque o \"agora\" se chama \"presente\"";
+        //        Set<String> suggestedImages =
+
+        //        phrase.getCategories().stream().forEach();
 
         BufferedImage image = ImageIO.read(
             new URL("https://mensagemdodia.s3.sa-east-1.amazonaws.com/testes-com-imagens/frases_de_amor.jpg")
