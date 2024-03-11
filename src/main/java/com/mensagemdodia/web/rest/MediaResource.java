@@ -180,7 +180,12 @@ public class MediaResource {
     }
 
     @PostMapping(value = "phrase", produces = MediaType.IMAGE_JPEG_VALUE)
-    public @ResponseBody byte[] createNewImageForText(@RequestBody CreateImageMediaDTO createImageMediaDTO) throws IOException {
-        return mediaService.createNewImageForPhrase(createImageMediaDTO);
+    public @ResponseBody byte[] createNewImageForText(@RequestBody CreateImageMediaDTO createImageMediaDTO) {
+        try {
+            return mediaService.createNewImageForPhrase(createImageMediaDTO);
+        } catch (IOException e) {
+            log.error("Error when try to create image for text", e);
+            throw new RuntimeException(e);
+        }
     }
 }
