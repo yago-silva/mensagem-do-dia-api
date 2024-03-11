@@ -1,5 +1,8 @@
 package com.mensagemdodia.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.mensagemdodia.domain.ImageMediaEditor;
 import com.mensagemdodia.domain.Media;
 import com.mensagemdodia.domain.Phrase;
@@ -11,10 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.time.Instant;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import org.slf4j.Logger;
@@ -37,10 +37,13 @@ public class MediaService {
 
     private final PhraseRepository phraseRepository;
 
-    public MediaService(MediaRepository mediaRepository, MediaMapper mediaMapper, PhraseRepository phraseRepository) {
+    private final AmazonS3 amazonS3;
+
+    public MediaService(MediaRepository mediaRepository, MediaMapper mediaMapper, PhraseRepository phraseRepository, AmazonS3 amazonS3) {
         this.mediaRepository = mediaRepository;
         this.mediaMapper = mediaMapper;
         this.phraseRepository = phraseRepository;
+        this.amazonS3 = amazonS3;
     }
 
     /**
@@ -129,12 +132,36 @@ public class MediaService {
     public byte[] createNewImageForPhrase(Long phraseId) throws IOException {
         Phrase phrase = phraseRepository.findById(phraseId).orElseThrow();
 
-        //        Set<String> suggestedImages =
+        List<String> suggestedImages = new ArrayList<>();
+
+        if (!phrase.getCategories().isEmpty()) {
+            suggestedImages = phrase
+                .getCategories()
+                .stream()
+                .map(category -> {
+                    ObjectListing objectListing = amazonS3.listObjects("mensagemdodia", "images/suggestions/" + category.getSlug());
+                    return objectListing.getObjectSummaries();
+                })
+                .flatMap(Collection::stream)
+                .map(S3ObjectSummary::getKey)
+                .filter(key -> key.endsWith(".jpg") || key.endsWith(".jpeg"))
+                .map(key -> "https://mensagemdodia.s3.sa-east-1.amazonaws.com/" + key)
+                .collect(Collectors.toList());
+        }
+
+        if (suggestedImages.isEmpty()) {
+            suggestedImages.add("https://mensagemdodia.s3.sa-east-1.amazonaws.com/images/suggestions/general/general-1.jpg");
+            suggestedImages.add("https://mensagemdodia.s3.sa-east-1.amazonaws.com/images/suggestions/general/general-2.jpg");
+            suggestedImages.add("https://mensagemdodia.s3.sa-east-1.amazonaws.com/images/suggestions/general/general-3.jpg");
+        }
 
         //        phrase.getCategories().stream().forEach();
 
+        Random rand = new Random();
+
         BufferedImage image = ImageIO.read(
-            new URL("https://mensagemdodia.s3.sa-east-1.amazonaws.com/testes-com-imagens/frases_de_amor.jpg")
+            //new URL("https://mensagemdodia.s3.sa-east-1.amazonaws.com/testes-com-imagens/frases_de_amor.jpg")
+            new URL(suggestedImages.get(rand.nextInt(suggestedImages.size())))
         );
 
         return ImageMediaEditor.addPhraseToImage(image, phrase);
