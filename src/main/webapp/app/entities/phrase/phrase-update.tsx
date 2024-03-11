@@ -265,7 +265,7 @@ export const PhraseUpdate = () => {
                     type="button"
                     onClick={async () => {
                       axios
-                        .get('/api/media/phrase/1', {
+                        .get(`/api/media/phrase/${id}`, {
                           responseType: 'arraybuffer',
                         })
                         .then(response => {
