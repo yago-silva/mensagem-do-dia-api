@@ -2,6 +2,7 @@ package com.mensagemdodia.web.rest;
 
 import com.mensagemdodia.repository.MediaRepository;
 import com.mensagemdodia.service.MediaService;
+import com.mensagemdodia.service.dto.CreateImageMediaDTO;
 import com.mensagemdodia.service.dto.MediaDTO;
 import com.mensagemdodia.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
@@ -178,8 +179,8 @@ public class MediaResource {
             .build();
     }
 
-    @GetMapping(value = "phrase/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public @ResponseBody byte[] createNewImageForPhrase(@PathVariable("id") Long id) throws IOException {
-        return mediaService.createNewImageForPhrase(id);
+    @PostMapping(value = "phrase", produces = MediaType.IMAGE_JPEG_VALUE)
+    public @ResponseBody byte[] createNewImageForText(@RequestBody CreateImageMediaDTO createImageMediaDTO) throws IOException {
+        return mediaService.createNewImageForPhrase(createImageMediaDTO);
     }
 }

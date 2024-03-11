@@ -15,10 +15,10 @@ import org.apache.commons.compress.utils.IOUtils;
 
 public class ImageMediaEditor {
 
-    public static byte[] addPhraseToImage(BufferedImage image, Phrase phrase) throws IOException {
+    public static byte[] addPhraseToImage(BufferedImage image, String mainText, String secondaryText) throws IOException {
         image = addBlur(image);
         addOpaqueBackgrounds(image);
-        addPhraseContent(image, phrase);
+        addPhraseContent(image, mainText, secondaryText);
         addSiteRef(image);
 
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
@@ -55,12 +55,12 @@ public class ImageMediaEditor {
         graphics2.create();
     }
 
-    private static void addPhraseContent(BufferedImage image, Phrase phrase) {
+    private static void addPhraseContent(BufferedImage image, String mainText, String secondaryText) {
         List<String> textLines = new ArrayList<>();
 
         String nextLine = "";
 
-        String[] split = phrase.getContent().split(" ");
+        String[] split = mainText.split(" ");
         for (var index = 0; index < split.length; index++) {
             nextLine += " " + split[index];
 
@@ -82,9 +82,7 @@ public class ImageMediaEditor {
 
         var lineSpacing = metrics.getHeight() + (metrics.getHeight() / 2);
 
-        Author author = phrase.getAuthor();
-
-        var totalLinesOfText = author == null ? textLines.size() : textLines.size() + 1;
+        var totalLinesOfText = secondaryText == null ? textLines.size() : textLines.size() + 1;
 
         int positionY = (image.getHeight() - (lineSpacing * totalLinesOfText)) / 2 + metrics.getAscent();
         for (int index = 0; index < textLines.size(); index++) {
@@ -95,13 +93,13 @@ public class ImageMediaEditor {
 
         textGraphics.create();
 
-        if (author != null) {
+        if (secondaryText != null) {
             Graphics authorTextGraphics = image.getGraphics();
             Font authorTextFont = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
             authorTextGraphics.setFont(authorTextFont);
             authorTextGraphics.setColor(Color.decode("#FFFFFF"));
 
-            String authorName = "(" + phrase.getAuthor().getName().toUpperCase() + ")";
+            String authorName = "(" + secondaryText.toUpperCase() + ")";
             FontMetrics authorFontMetrics = authorTextGraphics.getFontMetrics(authorTextFont);
             int positionX = (image.getWidth() - authorFontMetrics.stringWidth(authorName)) / 2;
 

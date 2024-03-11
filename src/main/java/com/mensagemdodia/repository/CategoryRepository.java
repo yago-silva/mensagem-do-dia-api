@@ -21,4 +21,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     @Query("SELECT c FROM Category c WHERE (c.active = true OR :includeInactives = true) AND c.category.id = :id ORDER BY c.createdAt DESC")
     List<Category> findChildCategoryByParentCategoryId(Long id, @Param("includeInactives") boolean includeInactives);
+
+    @Query("SELECT c FROM Category c WHERE c.id in (:ids) AND c.active = true ORDER BY c.updatedAt DESC")
+    public List<Category> getAllByIds(List<Long> ids);
 }

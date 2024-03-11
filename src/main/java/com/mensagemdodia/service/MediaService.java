@@ -3,11 +3,14 @@ package com.mensagemdodia.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.mensagemdodia.domain.Category;
 import com.mensagemdodia.domain.ImageMediaEditor;
 import com.mensagemdodia.domain.Media;
 import com.mensagemdodia.domain.Phrase;
+import com.mensagemdodia.repository.CategoryRepository;
 import com.mensagemdodia.repository.MediaRepository;
 import com.mensagemdodia.repository.PhraseRepository;
+import com.mensagemdodia.service.dto.CreateImageMediaDTO;
 import com.mensagemdodia.service.dto.MediaDTO;
 import com.mensagemdodia.service.mapper.MediaMapper;
 import java.awt.image.BufferedImage;
@@ -37,12 +40,21 @@ public class MediaService {
 
     private final PhraseRepository phraseRepository;
 
+    private final CategoryRepository categoryRepository;
+
     private final AmazonS3 amazonS3;
 
-    public MediaService(MediaRepository mediaRepository, MediaMapper mediaMapper, PhraseRepository phraseRepository, AmazonS3 amazonS3) {
+    public MediaService(
+        MediaRepository mediaRepository,
+        MediaMapper mediaMapper,
+        PhraseRepository phraseRepository,
+        CategoryRepository categoryRepository,
+        AmazonS3 amazonS3
+    ) {
         this.mediaRepository = mediaRepository;
         this.mediaMapper = mediaMapper;
         this.phraseRepository = phraseRepository;
+        this.categoryRepository = categoryRepository;
         this.amazonS3 = amazonS3;
     }
 
@@ -129,14 +141,14 @@ public class MediaService {
         mediaRepository.deleteById(id);
     }
 
-    public byte[] createNewImageForPhrase(Long phraseId) throws IOException {
-        Phrase phrase = phraseRepository.findById(phraseId).orElseThrow();
+    public byte[] createNewImageForPhrase(CreateImageMediaDTO createImageMediaDTO) throws IOException {
+        //Phrase phrase = phraseRepository.findById(phraseId).orElseThrow();
+        List<Category> categories = categoryRepository.getAllByIds(createImageMediaDTO.getCategoryIds());
 
         List<String> suggestedImages = new ArrayList<>();
 
-        if (!phrase.getCategories().isEmpty()) {
-            suggestedImages = phrase
-                .getCategories()
+        if (!categories.isEmpty()) {
+            suggestedImages = categories
                 .stream()
                 .map(category -> {
                     ObjectListing objectListing = amazonS3.listObjects("mensagemdodia", "images/suggestions/" + category.getSlug());
@@ -164,6 +176,6 @@ public class MediaService {
             new URL(suggestedImages.get(rand.nextInt(suggestedImages.size())))
         );
 
-        return ImageMediaEditor.addPhraseToImage(image, phrase);
+        return ImageMediaEditor.addPhraseToImage(image, createImageMediaDTO.getMainText(), createImageMediaDTO.getSecondaryText());
     }
 }
