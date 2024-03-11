@@ -18,7 +18,8 @@ import { ITag } from 'app/shared/model/tag.model';
 import { getEntities as getTags } from 'app/entities/tag/tag.reducer';
 import { IPhrase } from 'app/shared/model/phrase.model';
 import { getEntity, updateEntity, createEntity, reset } from './phrase.reducer';
-
+import axios from 'axios';
+import { Buffer } from 'buffer';
 export const PhraseUpdate = () => {
   const dispatch = useAppDispatch();
 
@@ -35,6 +36,8 @@ export const PhraseUpdate = () => {
   const loading = useAppSelector(state => state.phrase.loading);
   const updating = useAppSelector(state => state.phrase.updating);
   const updateSuccess = useAppSelector(state => state.phrase.updateSuccess);
+
+  const [mainMedia, setMainMedia] = useState('');
 
   const handleClose = () => {
     navigate('/phrase');
@@ -74,6 +77,7 @@ export const PhraseUpdate = () => {
       tags: mapIdList(values.tags),
       owner: users.find(it => it.id.toString() === values.owner.toString()),
       author: authors.find(it => it.id.toString() === values.author.toString()),
+      mainMediaBase64: mainMedia ? mainMedia : null,
     };
 
     if (isNew) {
@@ -248,6 +252,32 @@ export const PhraseUpdate = () => {
                     ))
                   : null}
               </ValidatedField>
+              {mainMedia && (
+                <div>
+                  <img width="250px" src={'data:image/jpeg;base64,' + mainMedia.toString()} />
+                </div>
+              )}
+              {!isNew && (
+                <div>
+                  <Button
+                    color="primary"
+                    id="save-entity"
+                    type="button"
+                    onClick={async () => {
+                      axios
+                        .get('/api/media/phrase/1', {
+                          responseType: 'arraybuffer',
+                        })
+                        .then(response => {
+                          var base64 = Buffer.from(response.data, 'binary').toString('base64');
+                          setMainMedia(base64);
+                        });
+                    }}
+                  >
+                    Gerar imagem
+                  </Button>
+                </div>
+              )}
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/phrase" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

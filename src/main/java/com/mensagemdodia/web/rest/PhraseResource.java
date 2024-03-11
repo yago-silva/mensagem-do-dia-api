@@ -9,6 +9,7 @@ import com.mensagemdodia.service.dto.TagDTO;
 import com.mensagemdodia.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -53,7 +54,7 @@ public class PhraseResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<PhraseDTO> createPhrase(@Valid @RequestBody PhraseDTO phraseDTO) throws URISyntaxException {
+    public ResponseEntity<PhraseDTO> createPhrase(@Valid @RequestBody PhraseDTO phraseDTO) throws URISyntaxException, IOException {
         log.debug("REST request to save Phrase : {}", phraseDTO);
         if (phraseDTO.getId() != null) {
             throw new BadRequestAlertException("A new phrase cannot already have an ID", ENTITY_NAME, "idexists");
@@ -78,7 +79,7 @@ public class PhraseResource {
     public ResponseEntity<PhraseDTO> updatePhrase(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody PhraseDTO phraseDTO
-    ) throws URISyntaxException {
+    ) throws URISyntaxException, IOException {
         log.debug("REST request to update Phrase : {}, {}", id, phraseDTO);
         if (phraseDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
