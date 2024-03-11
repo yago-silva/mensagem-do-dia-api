@@ -75,6 +75,9 @@ public class SecurityConfiguration {
                 authz
                     .requestMatchers(mvc.pattern("/index.html"), mvc.pattern("/*.js"), mvc.pattern("/*.txt"), mvc.pattern("/*.json"), mvc.pattern("/*.map"), mvc.pattern("/*.css")).permitAll()
                     .requestMatchers(mvc.pattern("/*.ico"), mvc.pattern("/*.png"), mvc.pattern("/*.svg"), mvc.pattern("/*.webapp")).permitAll()
+                    .requestMatchers(mvc.pattern(HttpMethod.PUT,"/api/phrases/**")).permitAll()
+                    .requestMatchers(mvc.pattern(HttpMethod.POST,"/api/media/phrase")).permitAll()
+                    .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/media/phrase/**")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/phrases/group/**")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/phrase-groupings/**")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/phrases/author/**")).permitAll()

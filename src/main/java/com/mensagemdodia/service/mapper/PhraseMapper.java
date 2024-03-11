@@ -1,15 +1,7 @@
 package com.mensagemdodia.service.mapper;
 
-import com.mensagemdodia.domain.Author;
-import com.mensagemdodia.domain.Category;
-import com.mensagemdodia.domain.Phrase;
-import com.mensagemdodia.domain.Tag;
-import com.mensagemdodia.domain.User;
-import com.mensagemdodia.service.dto.AuthorDTO;
-import com.mensagemdodia.service.dto.CategoryDTO;
-import com.mensagemdodia.service.dto.PhraseDTO;
-import com.mensagemdodia.service.dto.TagDTO;
-import com.mensagemdodia.service.dto.UserDTO;
+import com.mensagemdodia.domain.*;
+import com.mensagemdodia.service.dto.*;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.mapstruct.*;
@@ -23,6 +15,7 @@ public interface PhraseMapper extends EntityMapper<PhraseDTO, Phrase> {
     @Mapping(target = "author", source = "author", qualifiedByName = "authorId")
     @Mapping(target = "categories", source = "categories", qualifiedByName = "categoryIdSet")
     @Mapping(target = "tags", source = "tags", qualifiedByName = "tagIdSet")
+    @Mapping(target = "media", source = "media", qualifiedByName = "mediaIdSet")
     PhraseDTO toDto(Phrase s);
 
     @Mapping(target = "removeCategory", ignore = true)
@@ -57,5 +50,15 @@ public interface PhraseMapper extends EntityMapper<PhraseDTO, Phrase> {
     @Named("tagIdSet")
     default Set<TagDTO> toDtoTagIdSet(Set<Tag> tag) {
         return tag.stream().map(this::toDtoTagId).collect(Collectors.toSet());
+    }
+
+    @Named("mediaId")
+    @BeanMapping(ignoreByDefault = false)
+    @Mapping(target = "id", source = "id")
+    PhraseMediaDTO toDtoMediaId(Media media);
+
+    @Named("mediaIdSet")
+    default Set<PhraseMediaDTO> toDtoMediaIdSet(Set<Media> media) {
+        return media.stream().map(this::toDtoMediaId).collect(Collectors.toSet());
     }
 }

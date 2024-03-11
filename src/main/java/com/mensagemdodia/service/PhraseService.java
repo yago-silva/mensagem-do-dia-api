@@ -1,22 +1,25 @@
 package com.mensagemdodia.service;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.mensagemdodia.domain.Author;
+import com.mensagemdodia.domain.Media;
 import com.mensagemdodia.domain.Phrase;
 import com.mensagemdodia.domain.Tag;
-import com.mensagemdodia.repository.AuthorRepository;
-import com.mensagemdodia.repository.CategoryRepository;
-import com.mensagemdodia.repository.PhraseRepository;
-import com.mensagemdodia.repository.TagRepository;
+import com.mensagemdodia.domain.enumeration.MediaType;
+import com.mensagemdodia.repository.*;
 import com.mensagemdodia.service.dto.*;
 import com.mensagemdodia.service.mapper.AuthorMapper;
 import com.mensagemdodia.service.mapper.CategoryMapper;
 import com.mensagemdodia.service.mapper.PhraseMapper;
 import com.mensagemdodia.service.mapper.TagMapper;
+import java.io.*;
 import java.time.Instant;
+import java.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.commons.compress.utils.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -39,34 +42,26 @@ public class PhraseService {
 
     private final AuthorMapper authorMapper;
 
-    private final CategoryMapper categoryMapper;
-
-    private final TagMapper tagMapper;
-
     private final AuthorRepository authorRepository;
 
-    private final CategoryRepository categoryRepository;
+    private final MediaRepository mediaRepository;
 
-    private final TagRepository tagRepository;
+    private final AmazonS3 amazonS3;
 
     public PhraseService(
         PhraseRepository phraseRepository,
         PhraseMapper phraseMapper,
         AuthorMapper authorMapper,
-        CategoryMapper categoryMapper,
-        TagMapper tagMapper,
         AuthorRepository authorRepository,
-        CategoryRepository categoryRepository,
-        TagRepository tagRepository
+        MediaRepository mediaRepository,
+        AmazonS3 amazonS3
     ) {
         this.phraseRepository = phraseRepository;
         this.phraseMapper = phraseMapper;
         this.authorMapper = authorMapper;
-        this.categoryMapper = categoryMapper;
-        this.tagMapper = tagMapper;
         this.authorRepository = authorRepository;
-        this.categoryRepository = categoryRepository;
-        this.tagRepository = tagRepository;
+        this.mediaRepository = mediaRepository;
+        this.amazonS3 = amazonS3;
     }
 
     /**
@@ -75,12 +70,37 @@ public class PhraseService {
      * @param phraseDTO the entity to save.
      * @return the persisted entity.
      */
-    public PhraseDTO save(PhraseDTO phraseDTO) {
+    public PhraseDTO save(PhraseDTO phraseDTO) throws IOException {
         log.debug("Request to save Phrase : {}", phraseDTO);
         Phrase phrase = phraseMapper.toEntity(phraseDTO);
         phrase.createdAt(Instant.now());
         phrase.updatedAt(Instant.now());
         phrase = phraseRepository.save(phrase);
+
+        if (phraseDTO.getMainMediaBase64() != null) {
+            String s3Key = "images/phrases/" + phrase.getId() + "/" + phrase.getSlug() + ".jpg";
+
+            byte[] decodedBytes = Base64.getDecoder().decode(phraseDTO.getMainMediaBase64());
+            File tempFile = File.createTempFile(phrase.getSlug(), ".jpg");
+
+            try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+                fos.write(decodedBytes);
+                amazonS3.putObject("mensagemdodia", s3Key, tempFile);
+            } catch (Exception ex) {
+                throw ex;
+            }
+
+            Media media = new Media();
+            media.setPhrase(phrase);
+            media.setUrl(s3Key);
+            media.setActive(true);
+            media.setType(MediaType.IMAGE);
+            media.setHeight(720l);
+            media.setWidth(720l);
+            mediaRepository.save(media);
+
+            phrase.addMedia(media);
+        }
         return phraseMapper.toDto(phrase);
     }
 
@@ -90,11 +110,40 @@ public class PhraseService {
      * @param phraseDTO the entity to save.
      * @return the persisted entity.
      */
-    public PhraseDTO update(PhraseDTO phraseDTO) {
+    public PhraseDTO update(PhraseDTO phraseDTO) throws IOException {
         log.debug("Request to update Phrase : {}", phraseDTO);
         Phrase phrase = phraseMapper.toEntity(phraseDTO);
         phrase.updatedAt(Instant.now());
         phrase = phraseRepository.save(phrase);
+
+        if (phraseDTO.getMainMediaBase64() != null) {
+            String s3Key = "images/phrases/" + phrase.getId() + "/" + phrase.getSlug() + ".jpg";
+
+            byte[] decodedBytes = Base64.getDecoder().decode(phraseDTO.getMainMediaBase64());
+            File tempFile = File.createTempFile(phrase.getSlug(), ".jpg");
+
+            try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+                fos.write(decodedBytes);
+                amazonS3.putObject("mensagemdodia", s3Key, tempFile);
+            } catch (Exception ex) {
+                throw ex;
+            }
+
+            Media media = new Media();
+
+            if (!phrase.getMedia().isEmpty()) {
+                media = phrase.getMedia().iterator().next();
+            }
+
+            media.setPhrase(phrase);
+            media.setUrl(s3Key);
+            media.setActive(true);
+            media.setType(MediaType.IMAGE);
+            media.setHeight(720l);
+            media.setWidth(720l);
+            mediaRepository.save(media);
+        }
+
         return phraseMapper.toDto(phrase);
     }
 

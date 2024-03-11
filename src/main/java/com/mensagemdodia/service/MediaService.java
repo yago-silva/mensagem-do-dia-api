@@ -1,14 +1,25 @@
 package com.mensagemdodia.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.mensagemdodia.domain.Category;
+import com.mensagemdodia.domain.ImageMediaEditor;
 import com.mensagemdodia.domain.Media;
+import com.mensagemdodia.domain.Phrase;
+import com.mensagemdodia.repository.CategoryRepository;
 import com.mensagemdodia.repository.MediaRepository;
+import com.mensagemdodia.repository.PhraseRepository;
+import com.mensagemdodia.service.dto.CreateImageMediaDTO;
 import com.mensagemdodia.service.dto.MediaDTO;
 import com.mensagemdodia.service.mapper.MediaMapper;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import java.time.Instant;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,9 +38,24 @@ public class MediaService {
 
     private final MediaMapper mediaMapper;
 
-    public MediaService(MediaRepository mediaRepository, MediaMapper mediaMapper) {
+    private final PhraseRepository phraseRepository;
+
+    private final CategoryRepository categoryRepository;
+
+    private final AmazonS3 amazonS3;
+
+    public MediaService(
+        MediaRepository mediaRepository,
+        MediaMapper mediaMapper,
+        PhraseRepository phraseRepository,
+        CategoryRepository categoryRepository,
+        AmazonS3 amazonS3
+    ) {
         this.mediaRepository = mediaRepository;
         this.mediaMapper = mediaMapper;
+        this.phraseRepository = phraseRepository;
+        this.categoryRepository = categoryRepository;
+        this.amazonS3 = amazonS3;
     }
 
     /**
@@ -113,5 +139,43 @@ public class MediaService {
     public void delete(Long id) {
         log.debug("Request to delete Media : {}", id);
         mediaRepository.deleteById(id);
+    }
+
+    public byte[] createNewImageForPhrase(CreateImageMediaDTO createImageMediaDTO) throws IOException {
+        //Phrase phrase = phraseRepository.findById(phraseId).orElseThrow();
+        List<Category> categories = categoryRepository.getAllByIds(createImageMediaDTO.getCategoryIds());
+
+        List<String> suggestedImages = new ArrayList<>();
+
+        if (!categories.isEmpty()) {
+            suggestedImages = categories
+                .stream()
+                .map(category -> {
+                    ObjectListing objectListing = amazonS3.listObjects("mensagemdodia", "images/suggestions/" + category.getSlug());
+                    return objectListing.getObjectSummaries();
+                })
+                .flatMap(Collection::stream)
+                .map(S3ObjectSummary::getKey)
+                .filter(key -> key.endsWith(".jpg") || key.endsWith(".jpeg"))
+                .map(key -> "https://mensagemdodia.s3.sa-east-1.amazonaws.com/" + key)
+                .collect(Collectors.toList());
+        }
+
+        if (suggestedImages.isEmpty()) {
+            suggestedImages.add("https://mensagemdodia.s3.sa-east-1.amazonaws.com/images/suggestions/general/general-1.jpg");
+            suggestedImages.add("https://mensagemdodia.s3.sa-east-1.amazonaws.com/images/suggestions/general/general-2.jpg");
+            suggestedImages.add("https://mensagemdodia.s3.sa-east-1.amazonaws.com/images/suggestions/general/general-3.jpg");
+        }
+
+        //        phrase.getCategories().stream().forEach();
+
+        Random rand = new Random();
+
+        BufferedImage image = ImageIO.read(
+            //new URL("https://mensagemdodia.s3.sa-east-1.amazonaws.com/testes-com-imagens/frases_de_amor.jpg")
+            new URL(suggestedImages.get(rand.nextInt(suggestedImages.size())))
+        );
+
+        return ImageMediaEditor.addPhraseToImage(image, createImageMediaDTO.getMainText(), createImageMediaDTO.getSecondaryText());
     }
 }

@@ -2,18 +2,28 @@ package com.mensagemdodia.web.rest;
 
 import com.mensagemdodia.repository.MediaRepository;
 import com.mensagemdodia.service.MediaService;
+import com.mensagemdodia.service.dto.CreateImageMediaDTO;
 import com.mensagemdodia.service.dto.MediaDTO;
 import com.mensagemdodia.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import javax.imageio.ImageIO;
+import org.apache.commons.compress.utils.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
@@ -56,8 +66,7 @@ public class MediaResource {
             throw new BadRequestAlertException("A new media cannot already have an ID", ENTITY_NAME, "idexists");
         }
         MediaDTO result = mediaService.save(mediaDTO);
-        return ResponseEntity
-            .created(new URI("/api/media/" + result.getId()))
+        return ResponseEntity.created(new URI("/api/media/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -90,8 +99,7 @@ public class MediaResource {
         }
 
         MediaDTO result = mediaService.update(mediaDTO);
-        return ResponseEntity
-            .ok()
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, mediaDTO.getId().toString()))
             .body(result);
     }
@@ -166,9 +174,13 @@ public class MediaResource {
     public ResponseEntity<Void> deleteMedia(@PathVariable("id") Long id) {
         log.debug("REST request to delete Media : {}", id);
         mediaService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @PostMapping(value = "phrase", produces = MediaType.IMAGE_JPEG_VALUE)
+    public @ResponseBody byte[] createNewImageForText(@RequestBody CreateImageMediaDTO createImageMediaDTO) throws IOException {
+        return mediaService.createNewImageForPhrase(createImageMediaDTO);
     }
 }

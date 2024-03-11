@@ -3,6 +3,7 @@ package com.mensagemdodia.service.dto;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -19,10 +20,10 @@ public class PhraseDTO implements Serializable {
     private String content;
 
     @NotNull
-    private Instant createdAt;
+    private Instant createdAt = Instant.now();
 
     @NotNull
-    private Instant updatedAt;
+    private Instant updatedAt = Instant.now();
 
     @NotNull
     private Boolean featured;
@@ -40,6 +41,10 @@ public class PhraseDTO implements Serializable {
     private Set<CategoryDTO> categories = new HashSet<>();
 
     private Set<TagDTO> tags = new HashSet<>();
+
+    private Set<PhraseMediaDTO> media = new HashSet<>();
+
+    private String mainMediaBase64;
 
     public Long getId() {
         return id;
@@ -165,6 +170,23 @@ public class PhraseDTO implements Serializable {
             ", author=" + getAuthor() +
             ", categories=" + getCategories() +
             ", tags=" + getTags() +
+            ", media=" + getMedia() +
             "}";
+    }
+
+    public Set<PhraseMediaDTO> getMedia() {
+        return media;
+    }
+
+    public void setMedia(Set<PhraseMediaDTO> media) {
+        this.media = media;
+    }
+
+    public String getMainMediaBase64() {
+        return mainMediaBase64;
+    }
+
+    public void setMainMediaBase64(String mainMediaBase64) {
+        this.mainMediaBase64 = mainMediaBase64;
     }
 }
