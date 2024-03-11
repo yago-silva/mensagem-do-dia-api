@@ -10,4 +10,6 @@ RUN npm install
 
 RUN ./gradlew clean
 
+RUN apk update && apk add fontconfig && apk add ttf-dejavu && rm -rf /var/cache/apk/*
+
 CMD ./gradlew -Pprod --warning-mode all

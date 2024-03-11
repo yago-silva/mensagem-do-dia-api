@@ -74,7 +74,7 @@ public class ImageMediaEditor {
 
         Graphics textGraphics = image.getGraphics();
 
-        Font font = new Font(textGraphics.getFont().getName(), Font.BOLD, 42);
+        Font font = new Font(Font.SANS_SERIF, Font.BOLD, 42);
 
         textGraphics.setFont(font);
         textGraphics.setColor(Color.decode("#FFFFFF"));
@@ -94,7 +94,7 @@ public class ImageMediaEditor {
 
         if (secondaryText != null) {
             Graphics authorTextGraphics = image.getGraphics();
-            Font authorTextFont = new Font(authorTextGraphics.getFont().getName(), Font.PLAIN, 20);
+            Font authorTextFont = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
             authorTextGraphics.setFont(authorTextFont);
             authorTextGraphics.setColor(Color.decode("#FFFFFF"));
 
@@ -109,7 +109,7 @@ public class ImageMediaEditor {
 
     private static void addSiteRef(BufferedImage image) {
         Graphics textGraphics = image.getGraphics();
-        Font textFont = new Font(textGraphics.getFont().getName(), Font.PLAIN, 32);
+        Font textFont = new Font(Font.SANS_SERIF, Font.PLAIN, 32);
         textGraphics.setFont(textFont);
         textGraphics.setColor(Color.decode("#FFFFFF"));
 
