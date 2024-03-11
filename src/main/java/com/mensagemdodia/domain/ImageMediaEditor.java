@@ -72,30 +72,29 @@ public class ImageMediaEditor {
 
         textLines.add(nextLine.trim());
 
-        Font font = new Font(Font.SANS_SERIF, Font.BOLD, 42);
-
         Graphics textGraphics = image.getGraphics();
+
+        Font font = new Font(textGraphics.getFont().getName(), Font.BOLD, 42);
+
         textGraphics.setFont(font);
         textGraphics.setColor(Color.decode("#FFFFFF"));
-
         FontMetrics metrics = textGraphics.getFontMetrics(font);
-
         var lineSpacing = metrics.getHeight() + (metrics.getHeight() / 2);
 
         var totalLinesOfText = secondaryText == null ? textLines.size() : textLines.size() + 1;
 
         int positionY = (image.getHeight() - (lineSpacing * totalLinesOfText)) / 2 + metrics.getAscent();
+
         for (int index = 0; index < textLines.size(); index++) {
             int positionX = (image.getWidth() - metrics.stringWidth(textLines.get(index).toUpperCase())) / 2;
             textGraphics.drawString(textLines.get(index).toUpperCase(), positionX, positionY);
             positionY += lineSpacing;
         }
-
         textGraphics.create();
 
         if (secondaryText != null) {
             Graphics authorTextGraphics = image.getGraphics();
-            Font authorTextFont = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
+            Font authorTextFont = new Font(authorTextGraphics.getFont().getName(), Font.PLAIN, 20);
             authorTextGraphics.setFont(authorTextFont);
             authorTextGraphics.setColor(Color.decode("#FFFFFF"));
 
@@ -110,7 +109,7 @@ public class ImageMediaEditor {
 
     private static void addSiteRef(BufferedImage image) {
         Graphics textGraphics = image.getGraphics();
-        Font textFont = new Font(Font.SANS_SERIF, Font.PLAIN, 32);
+        Font textFont = new Font(textGraphics.getFont().getName(), Font.PLAIN, 32);
         textGraphics.setFont(textFont);
         textGraphics.setColor(Color.decode("#FFFFFF"));
 
