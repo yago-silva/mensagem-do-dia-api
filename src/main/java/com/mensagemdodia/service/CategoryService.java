@@ -1,5 +1,6 @@
 package com.mensagemdodia.service;
 
+import com.github.slugify.Slugify;
 import com.mensagemdodia.domain.Category;
 import com.mensagemdodia.repository.CategoryRepository;
 import com.mensagemdodia.service.dto.CategoryDTO;
@@ -27,6 +28,8 @@ public class CategoryService {
 
     private final CategoryMapper categoryMapper;
 
+    final Slugify slg = Slugify.builder().build();
+
     public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
         this.categoryRepository = categoryRepository;
         this.categoryMapper = categoryMapper;
@@ -43,6 +46,9 @@ public class CategoryService {
         Category category = categoryMapper.toEntity(categoryDTO);
         category.createdAt(Instant.now());
         category.updatedAt(Instant.now());
+        if (category.getSlug().isEmpty() || category.getSlug().length() <= 5) {
+            category.setSlug(slg.slugify(category.getName()));
+        }
         category = categoryRepository.save(category);
         return categoryMapper.toDto(category);
     }
@@ -57,6 +63,9 @@ public class CategoryService {
         log.debug("Request to update Category : {}", categoryDTO);
         Category category = categoryMapper.toEntity(categoryDTO);
         category.updatedAt(Instant.now());
+        if (category.getSlug().isEmpty() || category.getSlug().length() <= 5) {
+            category.setSlug(slg.slugify(category.getName()));
+        }
         category = categoryRepository.save(category);
         return categoryMapper.toDto(category);
     }

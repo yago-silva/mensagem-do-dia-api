@@ -30,7 +30,6 @@ public class AuthorDTO implements Serializable {
     @NotNull
     private Boolean active;
 
-    @NotNull
     private String slug;
 
     private UserDTO owner;

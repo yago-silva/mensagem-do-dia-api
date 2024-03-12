@@ -1,6 +1,7 @@
 package com.mensagemdodia.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.github.slugify.Slugify;
 import com.mensagemdodia.domain.Author;
 import com.mensagemdodia.domain.Media;
 import com.mensagemdodia.domain.Phrase;
@@ -48,6 +49,8 @@ public class PhraseService {
 
     private final AmazonS3 amazonS3;
 
+    final Slugify slg = Slugify.builder().build();
+
     public PhraseService(
         PhraseRepository phraseRepository,
         PhraseMapper phraseMapper,
@@ -75,6 +78,9 @@ public class PhraseService {
         Phrase phrase = phraseMapper.toEntity(phraseDTO);
         phrase.createdAt(Instant.now());
         phrase.updatedAt(Instant.now());
+        if (phrase.getSlug().isEmpty() || phrase.getSlug().length() <= 5) {
+            phrase.setSlug(slg.slugify(phrase.getContent()));
+        }
         phrase = phraseRepository.save(phrase);
 
         if (phraseDTO.getMainMediaBase64() != null) {
@@ -114,6 +120,9 @@ public class PhraseService {
         log.debug("Request to update Phrase : {}", phraseDTO);
         Phrase phrase = phraseMapper.toEntity(phraseDTO);
         phrase.updatedAt(Instant.now());
+        if (phrase.getSlug().isEmpty() || phrase.getSlug().length() <= 5) {
+            phrase.setSlug(slg.slugify(phrase.getContent()));
+        }
         phrase = phraseRepository.save(phrase);
 
         if (phraseDTO.getMainMediaBase64() != null) {

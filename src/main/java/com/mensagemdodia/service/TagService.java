@@ -1,5 +1,6 @@
 package com.mensagemdodia.service;
 
+import com.github.slugify.Slugify;
 import com.mensagemdodia.domain.Tag;
 import com.mensagemdodia.repository.TagRepository;
 import com.mensagemdodia.service.dto.AuthorDTO;
@@ -30,6 +31,8 @@ public class TagService {
 
     private final TagMapper tagMapper;
 
+    final Slugify slg = Slugify.builder().build();
+
     public TagService(TagRepository tagRepository, TagMapper tagMapper) {
         this.tagRepository = tagRepository;
         this.tagMapper = tagMapper;
@@ -46,6 +49,9 @@ public class TagService {
         Tag tag = tagMapper.toEntity(tagDTO);
         tag.createdAt(Instant.now());
         tag.updatedAt(Instant.now());
+        if (tag.getSlug().isEmpty() || tag.getSlug().length() <= 5) {
+            tag.setSlug(slg.slugify(tag.getName()));
+        }
         tag = tagRepository.save(tag);
         return tagMapper.toDto(tag);
     }
@@ -60,6 +66,9 @@ public class TagService {
         log.debug("Request to update Tag : {}", tagDTO);
         Tag tag = tagMapper.toEntity(tagDTO);
         tag.updatedAt(Instant.now());
+        if (tag.getSlug().isEmpty() || tag.getSlug().length() <= 5) {
+            tag.setSlug(slg.slugify(tag.getName()));
+        }
         tag = tagRepository.save(tag);
         return tagMapper.toDto(tag);
     }

@@ -163,16 +163,7 @@ export const AuthorUpdate = () => {
                 check
                 type="checkbox"
               />
-              <ValidatedField
-                label={translate('mensagemDoDiaApp.author.slug')}
-                id="author-slug"
-                name="slug"
-                data-cy="slug"
-                type="text"
-                validate={{
-                  required: { value: true, message: translate('entity.validation.required') },
-                }}
-              />
+              <ValidatedField label={translate('mensagemDoDiaApp.author.slug')} id="author-slug" name="slug" data-cy="slug" type="text" />
               <ValidatedField
                 id="author-owner"
                 name="owner"

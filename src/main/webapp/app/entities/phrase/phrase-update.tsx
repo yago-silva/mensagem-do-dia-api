@@ -176,16 +176,7 @@ export const PhraseUpdate = () => {
                 check
                 type="checkbox"
               />
-              <ValidatedField
-                label={translate('mensagemDoDiaApp.phrase.slug')}
-                id="phrase-slug"
-                name="slug"
-                data-cy="slug"
-                type="text"
-                validate={{
-                  required: { value: true, message: translate('entity.validation.required') },
-                }}
-              />
+              <ValidatedField label={translate('mensagemDoDiaApp.phrase.slug')} id="phrase-slug" name="slug" data-cy="slug" type="text" />
               <ValidatedField
                 id="phrase-owner"
                 name="owner"

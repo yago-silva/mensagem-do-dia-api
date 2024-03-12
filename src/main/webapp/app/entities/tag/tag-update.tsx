@@ -169,16 +169,7 @@ export const TagUpdate = () => {
                 check
                 type="checkbox"
               />
-              <ValidatedField
-                label={translate('mensagemDoDiaApp.tag.slug')}
-                id="tag-slug"
-                name="slug"
-                data-cy="slug"
-                type="text"
-                validate={{
-                  required: { value: true, message: translate('entity.validation.required') },
-                }}
-              />
+              <ValidatedField label={translate('mensagemDoDiaApp.tag.slug')} id="tag-slug" name="slug" data-cy="slug" type="text" />
               <ValidatedField id="tag-owner" name="owner" data-cy="owner" label={translate('mensagemDoDiaApp.tag.owner')} type="select">
                 <option value="" key="0" />
                 {users

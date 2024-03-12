@@ -1,5 +1,6 @@
 package com.mensagemdodia.service;
 
+import com.github.slugify.Slugify;
 import com.mensagemdodia.domain.Author;
 import com.mensagemdodia.repository.AuthorRepository;
 import com.mensagemdodia.service.dto.AuthorDTO;
@@ -29,6 +30,8 @@ public class AuthorService {
 
     private final AuthorMapper authorMapper;
 
+    final Slugify slg = Slugify.builder().build();
+
     public AuthorService(AuthorRepository authorRepository, AuthorMapper authorMapper) {
         this.authorRepository = authorRepository;
         this.authorMapper = authorMapper;
@@ -45,6 +48,10 @@ public class AuthorService {
         Author author = authorMapper.toEntity(authorDTO);
         author.createdAt(Instant.now());
         author.updatedAt(Instant.now());
+
+        if (author.getSlug().isEmpty() || author.getSlug().length() <= 5) {
+            author.setSlug(slg.slugify(author.getName()));
+        }
         author = authorRepository.save(author);
         return authorMapper.toDto(author);
     }
@@ -59,6 +66,9 @@ public class AuthorService {
         log.debug("Request to update Author : {}", authorDTO);
         Author author = authorMapper.toEntity(authorDTO);
         author.updatedAt(Instant.now());
+        if (author.getSlug().isEmpty() || author.getSlug().length() <= 5) {
+            author.setSlug(slg.slugify(author.getName()));
+        }
         author = authorRepository.save(author);
         return authorMapper.toDto(author);
     }

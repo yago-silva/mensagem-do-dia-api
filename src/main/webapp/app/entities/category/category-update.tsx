@@ -178,9 +178,6 @@ export const CategoryUpdate = () => {
                 name="slug"
                 data-cy="slug"
                 type="text"
-                validate={{
-                  required: { value: true, message: translate('entity.validation.required') },
-                }}
               />
               <ValidatedField
                 id="category-owner"
