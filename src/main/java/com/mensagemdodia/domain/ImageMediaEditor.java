@@ -16,7 +16,7 @@ import org.apache.commons.compress.utils.IOUtils;
 public class ImageMediaEditor {
 
     public static byte[] addPhraseToImage(BufferedImage image, String mainText, String secondaryText) throws IOException {
-        image = addBlur(image);
+        //        image = addBlur(image);
         addOpaqueBackgrounds(image);
         addPhraseContent(image, mainText, secondaryText);
         addSiteRef(image);
@@ -44,10 +44,10 @@ public class ImageMediaEditor {
     }
 
     private static void addOpaqueBackgrounds(BufferedImage image) {
-        Graphics graphics = image.getGraphics();
-        graphics.setColor(new Color(233, 30, 90, 127));
-        graphics.fillRect(0, 0, image.getWidth(), image.getHeight());
-        graphics.create();
+        //        Graphics graphics = image.getGraphics();
+        //        graphics.setColor(new Color(233, 30, 90, 127));
+        //        graphics.fillRect(0, 0, image.getWidth(), image.getHeight());
+        //        graphics.create();
 
         Graphics graphics2 = image.getGraphics();
         graphics2.setColor(new Color(0, 0, 0, 63));
