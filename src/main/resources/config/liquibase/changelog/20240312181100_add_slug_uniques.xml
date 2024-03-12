@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <changeSet  author="yago-silva"  id="20240312181100-1">
+        <addUniqueConstraint  columnNames="slug"
+                              constraintName="unique_phrase_slug"
+                              deferrable="true"
+                              tableName="phrase"
+                              validate="true"/>
+
+        <addUniqueConstraint  columnNames="slug"
+                              constraintName="unique_author_slug"
+                              deferrable="true"
+                              tableName="author"
+                              validate="true"/>
+
+        <addUniqueConstraint  columnNames="slug"
+                              constraintName="unique_category_slug"
+                              deferrable="true"
+                              tableName="category"
+                              validate="true"/>
+
+        <addUniqueConstraint  columnNames="slug"
+                              constraintName="unique_tag_slug"
+                              deferrable="true"
+                              tableName="tag"
+                              validate="true"/>
+    </changeSet>
+</databaseChangeLog>
