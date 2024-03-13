@@ -200,7 +200,7 @@ public class PhraseResource {
 
     @PostMapping("{id}/sync/instagram")
     public ResponseEntity syncToInstagram(@PathVariable("id") Integer phraseId) throws IOException {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://localhost:3000/").build();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://mensagemdodia.com/").build();
 
         InstagramClient instagramClient = retrofit.create(InstagramClient.class);
         Call call = instagramClient.post(phraseId);
