@@ -1,5 +1,6 @@
 package com.mensagemdodia.web.rest;
 
+import com.mensagemdodia.gateway.InstagramClient;
 import com.mensagemdodia.repository.PhraseRepository;
 import com.mensagemdodia.service.PhraseService;
 import com.mensagemdodia.service.dto.AuthorPhrasesDTO;
@@ -7,6 +8,7 @@ import com.mensagemdodia.service.dto.PhraseDTO;
 import com.mensagemdodia.service.dto.SluggedGroupDTO;
 import com.mensagemdodia.service.dto.TagDTO;
 import com.mensagemdodia.web.rest.errors.BadRequestAlertException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
@@ -20,6 +22,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
@@ -191,5 +196,17 @@ public class PhraseResource {
     public List<PhraseDTO> getFeaturedTags() {
         log.debug("REST request to get all featured Phrases");
         return phraseService.findAllFeatured();
+    }
+
+    @PostMapping("{id}/sync/instagram")
+    public ResponseEntity syncToInstagram(@PathVariable("id") Integer phraseId) throws IOException {
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://localhost:3000/").build();
+
+        InstagramClient instagramClient = retrofit.create(InstagramClient.class);
+        Call call = instagramClient.post(phraseId);
+
+        Response response = call.execute();
+
+        return ResponseEntity.status(response.code()).build();
     }
 }

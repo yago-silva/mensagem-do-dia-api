@@ -8,7 +8,7 @@ import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { ASC, DESC, SORT } from 'app/shared/util/pagination.constants';
 import { overrideSortStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-
+import axios from 'axios';
 import { getEntities } from './phrase.reducer';
 
 export const Phrase = () => {
@@ -165,6 +165,29 @@ export const Phrase = () => {
                   </td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
+                      <Button
+                        color="secondary"
+                        size="sm"
+                        data-cy="entityDetailsButton"
+                        onClick={() => {
+                          axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+
+                          axios
+                            .post(`/api/phrases/${phrase.id}/sync/instagram`)
+                            .then(response => {
+                              if (response.status == 200) {
+                                alert('Post compartilhado com sucesso');
+                              } else {
+                                alert('ERR0 - Não foi possível compartilhar');
+                              }
+                            })
+                            .catch(error => {
+                              alert(`ERRO - Ocorreu um erro ao compartilhar ${error}`);
+                            });
+                        }}
+                      >
+                        <FontAwesomeIcon icon="sync" /> Instagram
+                      </Button>
                       <Button tag={Link} to={`/phrase/${phrase.id}`} color="info" size="sm" data-cy="entityDetailsButton">
                         <FontAwesomeIcon icon="eye" />{' '}
                         <span className="d-none d-md-inline">
